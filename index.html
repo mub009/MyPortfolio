@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mubashir Palakkan Portfolio</title>
+<meta name="description" content="Mubashir Palakkan, full stack PHP and Laravel developer who also runs the servers. APIs, MySQL, healthcare integrations, Linux and AI features.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* Layout idea: one left-aligned column with a mono "status line" motif borrowed from a server console;
+   skill areas act as filters that light up the projects they were used on. */
+:root{
+  --bg:#f3f6f4; --surface:#ffffff; --ink:#11221f; --muted:#52645f; --line:#d5dedb;
+  --accent:#0b6e5f; --accent-soft:#dcefea; --signal:#b8720f;
+  --display:"Bricolage Grotesque","Segoe UI",system-ui,sans-serif;
+  --body:"IBM Plex Sans","Segoe UI",system-ui,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#0d1615; --surface:#14201e; --ink:#e4eeeb; --muted:#9bb0aa; --line:#273834;
+    --accent:#45c4a9; --accent-soft:#163a33; --signal:#e6a84a; color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0d1615; --surface:#14201e; --ink:#e4eeeb; --muted:#9bb0aa; --line:#273834;
+  --accent:#45c4a9; --accent-soft:#163a33; --signal:#e6a84a; color-scheme:dark;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important}}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);font-size:17px;line-height:1.6}
+a{color:var(--accent)}
+a:focus-visible,button:focus-visible{outline:2px solid var(--signal);outline-offset:3px;border-radius:4px}
+.wrap{max-width:1040px;margin:0 auto;padding:0 20px}
+h1,h2,h3{font-family:var(--display);line-height:1.1;text-wrap:balance;margin:0}
+.mono{font-family:var(--mono);font-size:.8rem;letter-spacing:.02em}
+
+/* top bar */
+.top{position:sticky;top:0;z-index:5;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+.top .wrap{display:flex;flex-wrap:wrap;gap:8px 20px;align-items:center;justify-content:space-between;padding-top:12px;padding-bottom:12px}
+.brand{font-family:var(--display);font-weight:700;color:var(--ink);text-decoration:none}
+.top nav{display:flex;flex-wrap:wrap;gap:4px 18px}
+.top nav a{color:var(--muted);text-decoration:none;font-size:.92rem}
+.top nav a:hover{color:var(--accent)}
+
+/* hero */
+.hero{padding:64px 0 48px}
+.status{display:inline-flex;flex-wrap:wrap;gap:6px 14px;align-items:center;color:var(--muted);margin-bottom:22px}
+.dot{width:9px;height:9px;border-radius:50%;background:var(--accent);box-shadow:0 0 0 4px var(--accent-soft)}
+.hero h1{font-size:clamp(2.3rem,7vw,4.4rem);font-weight:700;letter-spacing:-.02em;max-width:15ch}
+.hero h1 em{font-style:normal;color:var(--accent)}
+.lede{max-width:60ch;font-size:1.12rem;color:var(--muted);margin:22px 0 28px}
+.cta{display:flex;flex-wrap:wrap;gap:12px}
+.btn{display:inline-block;padding:12px 20px;border-radius:8px;font-weight:600;text-decoration:none;border:1.5px solid var(--accent)}
+.btn.solid{background:var(--accent);color:var(--bg)}
+.btn.ghost{color:var(--accent)}
+.facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:12px;overflow:hidden;margin-top:44px}
+.facts div{background:var(--surface);padding:18px}
+.facts b{display:block;font-family:var(--display);font-size:1.7rem;font-variant-numeric:tabular-nums}
+.facts span{color:var(--muted);font-size:.9rem}
+
+section{padding:56px 0;border-top:1px solid var(--line)}
+.head{display:flex;flex-wrap:wrap;gap:8px 24px;align-items:baseline;justify-content:space-between;margin-bottom:28px}
+.head h2{font-size:clamp(1.6rem,4vw,2.3rem)}
+.head p{margin:0;color:var(--muted);max-width:48ch}
+
+/* about */
+.about{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:28px}
+.about p{margin:0 0 14px;max-width:62ch}
+.note{background:var(--surface);border:1px solid var(--line);border-left:4px solid var(--signal);border-radius:10px;padding:18px 20px;align-self:start}
+.note p{margin:0;color:var(--muted)}
+.note strong{color:var(--ink)}
+
+/* skills */
+.areas{display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:16px}
+.area{text-align:left;font:inherit;color:inherit;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:20px;cursor:pointer;display:flex;flex-direction:column;gap:10px;transition:border-color .15s,transform .15s}
+.area:hover{border-color:var(--accent);transform:translateY(-2px)}
+.area[aria-pressed="true"]{border-color:var(--accent);background:var(--accent-soft)}
+.area .mono{color:var(--signal)}
+.area h3{font-size:1.25rem}
+.area p{margin:0;color:var(--muted);font-size:.96rem}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:auto;padding-top:6px}
+.chip{font-family:var(--mono);font-size:.74rem;padding:3px 8px;border-radius:999px;border:1px solid var(--line);background:var(--bg);color:var(--ink)}
+.hint{color:var(--muted);font-size:.9rem;margin-top:16px}
+
+/* work */
+.filterbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:20px}
+.filterbar span{color:var(--muted)}
+.reset{font:inherit;font-size:.85rem;background:none;border:1px solid var(--line);color:var(--ink);padding:5px 12px;border-radius:999px;cursor:pointer}
+.work{display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:16px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:20px;display:flex;flex-direction:column;gap:10px;transition:opacity .2s,border-color .2s}
+.card.dim{opacity:.32}
+.card.hit{border-color:var(--accent)}
+.card .mono{color:var(--muted)}
+.card h3{font-size:1.2rem}
+.card p{margin:0;color:var(--muted);font-size:.96rem}
+.card .chip.on{background:var(--accent);border-color:var(--accent);color:var(--bg)}
+
+/* path */
+.path{list-style:none;margin:0;padding:0;display:grid;gap:0}
+.path li{display:grid;grid-template-columns:minmax(120px,170px) 1fr;gap:8px 24px;padding:20px 0;border-bottom:1px solid var(--line)}
+.path li:last-child{border-bottom:0}
+.path .when{color:var(--signal);font-variant-numeric:tabular-nums}
+.path h3{font-size:1.15rem;margin-bottom:2px}
+.path .where{color:var(--muted);font-size:.95rem}
+.path p{margin:8px 0 0;max-width:62ch}
+@media (max-width:560px){.path li{grid-template-columns:1fr}}
+
+/* contact */
+.contact{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}
+.contact a{display:block;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:18px 20px;text-decoration:none;color:var(--ink);overflow-wrap:anywhere}
+.contact a:hover{border-color:var(--accent)}
+.contact .mono{display:block;color:var(--muted);margin-bottom:4px}
+footer{padding:28px 0 44px;color:var(--muted);font-size:.9rem;border-top:1px solid var(--line)}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="#top">Mubashir Palakkan</a>
+    <nav aria-label="Sections">
+      <a href="#about">About</a>
+      <a href="#skills">Skills</a>
+      <a href="#work">Work</a>
+      <a href="#path">Experience</a>
+      <a href="#contact">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+  <div class="wrap hero">
+    <div class="status mono"><span class="dot" aria-hidden="true"></span><span>Available for freelance projects</span><span>Kerala, India / Dammam, Saudi Arabia</span></div>
+    <h1>I build the web app <em>and</em> keep the server running.</h1>
+    <p class="lede">I'm Mubashir, a full stack developer working mostly in PHP and Laravel. I have been writing software since 2016 and looking after Linux servers for more than ten years, so one person can take your project from the first database table to a stable live deployment.</p>
+    <div class="cta">
+      <a class="btn solid" href="https://www.upwork.com/freelancers/~01a1aca0704aa27ed1">Hire me on Upwork</a>
+      <a class="btn ghost" href="#work">See my work</a>
+    </div>
+    <div class="facts">
+      <div><b>10+</b><span>years on Linux servers</span></div>
+      <div><b>2016</b><span>writing software since</span></div>
+      <div><b>6</b><span>skill areas I cover</span></div>
+      <div><b>2</b><span>languages: English, Malayalam</span></div>
+    </div>
+  </div>
+
+  <section id="about">
+    <div class="wrap">
+      <div class="head"><h2>About me</h2></div>
+      <div class="about">
+        <div>
+          <p>I studied Computer Applications at the University of Calicut and started as a junior engineer in Kozhikode. Since 2019 I have worked as a senior software engineer for a group of medical complexes in Saudi Arabia, where the software has to be right because clinics, insurers and the tax authority all depend on it.</p>
+          <p>That job taught me to care about the unglamorous parts: a query that stays fast when the table grows, a deployment that does not break at midnight, an integration that still works after the other side changes its API.</p>
+          <p>Alongside it I take freelance projects. Clients usually come to me with one of three things: something new to build, something broken to fix, or a server nobody wants to touch.</p>
+        </div>
+        <aside class="note">
+          <p><strong>How I work.</strong> I agree scope, timeline and cost before I start. You get regular updates and straight answers. The code lives in Git, comes with notes, and I stay around after delivery for fixes.</p>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <section id="skills">
+    <div class="wrap">
+      <div class="head"><h2>What I do</h2><p>Six areas. Tap one to see which projects used it.</p></div>
+      <div class="areas">
+        <button class="area" type="button" data-area="web" aria-pressed="false">
+          <span class="mono">Web applications</span>
+          <h3>Laravel back ends and admin tools</h3>
+          <p>Dashboards, admin panels and business tools, built from scratch or grown out of a codebase you already have.</p>
+          <span class="chips"><span class="chip">PHP</span><span class="chip">Laravel</span><span class="chip">JavaScript</span><span class="chip">HTML/CSS</span></span>
+        </button>
+        <button class="area" type="button" data-area="api" aria-pressed="false">
+          <span class="mono">APIs and integrations</span>
+          <h3>Making systems talk to each other</h3>
+          <p>REST APIs of my own, plus payment gateways, booking systems and other third-party services wired in properly.</p>
+          <span class="chips"><span class="chip">REST API</span><span class="chip">Payment gateways</span><span class="chip">Booking</span></span>
+        </button>
+        <button class="area" type="button" data-area="db" aria-pressed="false">
+          <span class="mono">Databases</span>
+          <h3>MySQL that stays fast</h3>
+          <p>Schema design, slow-query tuning and cleaning up databases that have become hard to manage as they grew.</p>
+          <span class="chips"><span class="chip">MySQL</span><span class="chip">Schema design</span><span class="chip">Query tuning</span></span>
+        </button>
+        <button class="area" type="button" data-area="health" aria-pressed="false">
+          <span class="mono">Healthcare and compliance</span>
+          <h3>Saudi healthcare integrations</h3>
+          <p>NPHIES insurance exchange over HL7 FHIR and ZATCA Phase 2 e-invoicing, delivered inside a working hospital system.</p>
+          <span class="chips"><span class="chip">NPHIES</span><span class="chip">HL7 FHIR</span><span class="chip">ZATCA Phase 2</span></span>
+        </button>
+        <button class="area" type="button" data-area="server" aria-pressed="false">
+          <span class="mono">Servers and deployment</span>
+          <h3>Linux, hosting and migrations</h3>
+          <p>VPS setup, WHM/cPanel, website and email migrations, PHP upgrades, DNS and Cloudflare, queues and background workers.</p>
+          <span class="chips"><span class="chip">Linux</span><span class="chip">cPanel/WHM</span><span class="chip">Docker</span><span class="chip">Cloudflare</span><span class="chip">Supervisor</span></span>
+        </button>
+        <button class="area" type="button" data-area="ai" aria-pressed="false">
+          <span class="mono">AI features</span>
+          <h3>LLMs inside real products</h3>
+          <p>Support chatbots and automated ticket replies built on LLM APIs, and AI coding tools in my own daily workflow.</p>
+          <span class="chips"><span class="chip">LLM APIs</span><span class="chip">Chatbots</span><span class="chip">Support automation</span></span>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <section id="work">
+    <div class="wrap">
+      <div class="head"><h2>Selected work</h2><p>Projects from my Upwork portfolio and my day job.</p></div>
+      <div class="filterbar"><span class="mono" id="filter-label">Showing all projects</span><button class="reset" type="button" id="reset" hidden>Show all</button></div>
+      <div class="work">
+        <article class="card" data-areas="health api db web">
+          <span class="mono">Healthcare</span>
+          <h3>Hospital management system</h3>
+          <p>The application a group of medical complexes runs on, including multi-clinic inventory, NPHIES insurance exchange and ZATCA Phase 2 invoicing.</p>
+          <span class="chips"><span class="chip" data-a="health">Healthcare</span><span class="chip" data-a="api">APIs</span><span class="chip" data-a="db">Databases</span><span class="chip" data-a="web">Web app</span></span>
+        </article>
+        <article class="card" data-areas="ai db api">
+          <span class="mono">AI product</span>
+          <h3>AI support platform</h3>
+          <p>A support system with an LLM chatbot and automated replies, on a MySQL back end tuned to handle tickets and messages at scale.</p>
+          <span class="chips"><span class="chip" data-a="ai">AI</span><span class="chip" data-a="db">Databases</span><span class="chip" data-a="api">APIs</span></span>
+        </article>
+        <article class="card" data-areas="web api db">
+          <span class="mono">Marketplace</span>
+          <h3>Markkito</h3>
+          <p>A marketplace web application I worked on as part of the product team, building back-end features and the database behind them.</p>
+          <span class="chips"><span class="chip" data-a="web">Web app</span><span class="chip" data-a="api">APIs</span><span class="chip" data-a="db">Databases</span></span>
+        </article>
+        <article class="card" data-areas="web api">
+          <span class="mono">Booking</span>
+          <h3>Laser Booking Online</h3>
+          <p>An online booking site where customers pick a service and reserve a slot without phoning the clinic.</p>
+          <span class="chips"><span class="chip" data-a="web">Web app</span><span class="chip" data-a="api">Integrations</span></span>
+        </article>
+        <article class="card" data-areas="web db">
+          <span class="mono">Pharmacy</span>
+          <h3>Lavender Pharmacies</h3>
+          <p>The website for a pharmacy group, built and maintained end to end.</p>
+          <span class="chips"><span class="chip" data-a="web">Web app</span><span class="chip" data-a="db">Databases</span></span>
+        </article>
+        <article class="card" data-areas="web server">
+          <span class="mono">Retail</span>
+          <h3>Al Masroor Jewellery</h3>
+          <p>A jewellery business website, from build through to hosting and going live.</p>
+          <span class="chips"><span class="chip" data-a="web">Web app</span><span class="chip" data-a="server">Servers</span></span>
+        </article>
+        <article class="card" data-areas="web server db">
+          <span class="mono">Web product</span>
+          <h3>MyDomainBook.com</h3>
+          <p>A web application I built, deployed and host myself.</p>
+          <span class="chips"><span class="chip" data-a="web">Web app</span><span class="chip" data-a="server">Servers</span><span class="chip" data-a="db">Databases</span></span>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section id="path">
+    <div class="wrap">
+      <div class="head"><h2>Experience</h2></div>
+      <ol class="path">
+        <li>
+          <span class="when mono">2019 to now</span>
+          <div><h3>Senior Software Engineer</h3><div class="where">Dr Khalid Alruhaimi Medical Complexes, Dammam, Saudi Arabia</div>
+          <p>I build and run the hospital application, its insurance and tax integrations, and the servers underneath it.</p></div>
+        </li>
+        <li>
+          <span class="when mono">Nov 2017 to 2019</span>
+          <div><h3>Junior Software Engineer</h3><div class="where">elegansys Technologies LLP, Kozhikode, India</div>
+          <p>Worked on the Markkito marketplace application.</p></div>
+        </li>
+        <li>
+          <span class="when mono">Apr 2016 to Oct 2017</span>
+          <div><h3>Software Engineer</h3><div class="where">Clienview Technologies, Kozhikode, India</div>
+          <p>My first job after graduating, building and maintaining web applications.</p></div>
+        </li>
+        <li>
+          <span class="when mono">2013 to 2016</span>
+          <div><h3>Bachelor of Computer Applications</h3><div class="where">University of Calicut</div></div>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <section id="contact">
+    <div class="wrap">
+      <div class="head"><h2>Let's talk</h2><p>Tell me what you need and I'll reply with a clear plan and estimate.</p></div>
+      <div class="contact">
+        <a href="mailto:pro.mubashir@outlook.com"><span class="mono">Email</span>pro.mubashir@outlook.com</a>
+        <a href="https://www.upwork.com/freelancers/~01a1aca0704aa27ed1"><span class="mono">Upwork</span>Hire me on Upwork</a>
+        <a href="https://www.linkedin.com/in/mubashir-palakkan"><span class="mono">LinkedIn</span>linkedin.com/in/mubashir-palakkan</a>
+        <a href="https://github.com/mub009"><span class="mono">GitHub</span>github.com/mub009</a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer><div class="wrap">Mubashir Palakkan. Built by hand and hosted on GitHub Pages.</div></footer>
+
+<script>
+(function(){
+  var names={web:"web applications",api:"APIs and integrations",db:"databases",health:"healthcare and compliance",server:"servers and deployment",ai:"AI features"};
+  var areas=document.querySelectorAll(".area"),cards=document.querySelectorAll(".card");
+  var label=document.getElementById("filter-label"),reset=document.getElementById("reset"),current=null;
+  function apply(a){
+    current=a;
+    areas.forEach(function(b){b.setAttribute("aria-pressed",String(b.dataset.area===a));});
+    var n=0;
+    cards.forEach(function(c){
+      var hit=a&&c.dataset.areas.split(" ").indexOf(a)>-1;
+      c.classList.toggle("dim",!!a&&!hit);
+      c.classList.toggle("hit",!!hit);
+      if(hit)n++;
+      c.querySelectorAll(".chip").forEach(function(ch){ch.classList.toggle("on",!!a&&ch.dataset.a===a);});
+    });
+    label.textContent=a?n+" project"+(n===1?"":"s")+" using "+names[a]:"Showing all projects";
+    reset.hidden=!a;
+  }
+  areas.forEach(function(b){b.addEventListener("click",function(){
+    var a=b.dataset.area===current?null:b.dataset.area;
+    apply(a);
+    if(a){document.getElementById("work").scrollIntoView({behavior:"smooth",block:"start"});}
+  });});
+  reset.addEventListener("click",function(){apply(null);});
+})();
+</script>
+</body>
+</html>
