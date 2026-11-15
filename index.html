@@ -86,7 +86,7 @@ html:not(.has3d) .how,html:not(.has3d) .watch{display:none}
 
 /* long sections: one wide guide page */
 .long{padding:90px 0}
-.sheet{background:var(--page);backdrop-filter:blur(8px);border:1px solid var(--rule);border-radius:6px;padding:34px 36px;max-width:860px;margin:0 auto}
+.sheet{background:var(--page);backdrop-filter:blur(8px);border:1px solid var(--rule);border-radius:6px;padding:34px 36px;max-width:920px;margin:0 auto}
 .sheet h2{font-size:clamp(1.7rem,3.2vw,2.3rem)}
 .sheet .sub{color:var(--muted);margin-top:8px;max-width:56ch}
 .filterbar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:22px 0 4px;color:var(--muted);font-size:.93rem}
@@ -99,6 +99,18 @@ html:not(.has3d) .how,html:not(.has3d) .watch{display:none}
 .work p{color:#2c4146}
 .work .tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
 .tag.on{background:var(--teal);border-color:var(--teal);color:#fff}
+.shots{grid-column:1/-1;display:flex;gap:10px;overflow-x:auto;padding:6px 2px 10px;scroll-snap-type:x proximity}
+.shot{flex:0 0 auto;padding:0;border:1px solid var(--rule);border-radius:6px;overflow:hidden;background:#fff;cursor:zoom-in;scroll-snap-align:start;line-height:0}
+.shot img{height:150px;width:auto;display:block}
+.shot:only-child img{height:230px}
+.shot:hover{border-color:var(--teal)}
+#lb{border:0;padding:0;background:transparent;max-width:min(96vw,1300px);max-height:96vh;color:#fff}
+#lb::backdrop{background:rgba(8,14,30,.88)}
+#lb img{display:block;max-width:100%;max-height:82vh;width:auto;height:auto;margin:0 auto;border-radius:6px;background:#fff}
+#lb .bar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;padding:12px 2px 0;font-size:.95rem}
+#lb .nav{display:flex;gap:8px;flex:0 0 auto}
+#lb button{font:inherit;color:#fff;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.35);border-radius:999px;padding:6px 14px;cursor:pointer}
+#lb button:hover{background:rgba(255,255,255,.28)}
 .path{list-style:none;margin:20px 0 0;padding:0}
 .path li{display:grid;grid-template-columns:minmax(120px,170px) 1fr;gap:6px 28px;padding:18px 0;border-top:1px solid var(--rule)}
 .path .when{color:var(--orange);font-weight:600;font-variant-numeric:tabular-nums}
@@ -260,7 +272,7 @@ footer .wrap{max-width:860px}
     <div class="wrap">
       <div class="sheet">
         <h2>Selected work</h2>
-        <p class="sub">Projects from my Upwork portfolio and my day job.</p>
+        <p class="sub">Projects from my Upwork portfolio and my day job. Select a screenshot to see it full size.</p>
         <div class="filterbar"><span id="filter-label">Showing all projects</span><button class="reset" type="button" id="reset" hidden>Show all</button></div>
         <ul class="work">
           <li data-areas="health api db web">
@@ -273,30 +285,65 @@ footer .wrap{max-width:860px}
             <div><p>A support system with an LLM chatbot and automated replies, on a MySQL back end tuned to handle tickets and messages at scale.</p>
             <div class="tags"><span class="tag" data-a="ai">AI</span><span class="tag" data-a="db">Databases</span><span class="tag" data-a="api">APIs</span></div></div>
           </li>
+          <li data-areas="web api db ai">
+            <div><h3>Markkito</h3><div class="kind">Business directory and marketplace</div></div>
+            <div><p>A local business directory and B2B/B2C marketplace. Businesses get a listing, online bookings, a mini website and a digital visiting card with a QR code. The admin side covers approvals, reports, SEO with Google Search Console, and AI summaries of customer reviews.</p>
+            <div class="tags"><span class="tag" data-a="web">Web app</span><span class="tag" data-a="api">APIs</span><span class="tag" data-a="db">Databases</span><span class="tag" data-a="ai">AI</span></div></div>
+            <div class="shots">
+              <button class="shot" type="button" data-full="img/markkito-1.webp" data-cap="Markkito: Business directory and marketplace, web and mobile"><img src="img/markkito-1-t.webp" alt="Markkito: Business directory and marketplace, web and mobile" width="640" height="360" loading="lazy"></button>
+              <button class="shot" type="button" data-full="img/markkito-2.webp" data-cap="Markkito: Local search, B2B directory, bookings and reviews"><img src="img/markkito-2-t.webp" alt="Markkito: Local search, B2B directory, bookings and reviews" width="640" height="427" loading="lazy"></button>
+              <button class="shot" type="button" data-full="img/markkito-3.webp" data-cap="Markkito: Mini website for a local business"><img src="img/markkito-3-t.webp" alt="Markkito: Mini website for a local business" width="640" height="360" loading="lazy"></button>
+              <button class="shot" type="button" data-full="img/markkito-4.webp" data-cap="Markkito: Digital visiting card with QR code"><img src="img/markkito-4-t.webp" alt="Markkito: Digital visiting card with QR code" width="640" height="360" loading="lazy"></button>
+              <button class="shot" type="button" data-full="img/markkito-5.webp" data-cap="Markkito: Google reviews with AI review insights"><img src="img/markkito-5-t.webp" alt="Markkito: Google reviews with AI review insights" width="640" height="360" loading="lazy"></button>
+              <button class="shot" type="button" data-full="img/markkito-6.webp" data-cap="Markkito: Card templates in the admin panel"><img src="img/markkito-6-t.webp" alt="Markkito: Card templates in the admin panel" width="640" height="360" loading="lazy"></button>
+              <button class="shot" type="button" data-full="img/markkito-7.webp" data-cap="Markkito: Platform reports dashboard"><img src="img/markkito-7-t.webp" alt="Markkito: Platform reports dashboard" width="640" height="360" loading="lazy"></button>
+              <button class="shot" type="button" data-full="img/markkito-8.webp" data-cap="Markkito: Reports and analytics"><img src="img/markkito-8-t.webp" alt="Markkito: Reports and analytics" width="640" height="360" loading="lazy"></button>
+              <button class="shot" type="button" data-full="img/markkito-9.webp" data-cap="Markkito: Business performance report with export"><img src="img/markkito-9-t.webp" alt="Markkito: Business performance report with export" width="640" height="360" loading="lazy"></button>
+              <button class="shot" type="button" data-full="img/markkito-10.webp" data-cap="Markkito: SEO control panel connected to Google Search Console"><img src="img/markkito-10-t.webp" alt="Markkito: SEO control panel connected to Google Search Console" width="640" height="360" loading="lazy"></button>
+            </div>
+          </li>
           <li data-areas="web api db">
-            <div><h3>Markkito</h3><div class="kind">Marketplace</div></div>
-            <div><p>A marketplace web application I worked on as part of the product team, building back-end features and the database behind them.</p>
+            <div><h3>NATMCO</h3><div class="kind">Beauty clinic booking platform</div></div>
+            <div><p>A booking platform for cosmetic clinics. Customers find a clinic, pick a treatment and book a slot. The admin panel manages clinics, appointments, online payments, offers and reviews.</p>
             <div class="tags"><span class="tag" data-a="web">Web app</span><span class="tag" data-a="api">APIs</span><span class="tag" data-a="db">Databases</span></div></div>
+            <div class="shots">
+              <button class="shot" type="button" data-full="img/natmco-1.webp" data-cap="NATMCO: Customer site and booking app"><img src="img/natmco-1-t.webp" alt="NATMCO: Customer site and booking app" width="640" height="480" loading="lazy"></button>
+              <button class="shot" type="button" data-full="img/natmco-2.webp" data-cap="NATMCO: Admin dashboard"><img src="img/natmco-2-t.webp" alt="NATMCO: Admin dashboard" width="640" height="360" loading="lazy"></button>
+              <button class="shot" type="button" data-full="img/natmco-3.webp" data-cap="NATMCO: Appointment and booking management"><img src="img/natmco-3-t.webp" alt="NATMCO: Appointment and booking management" width="640" height="360" loading="lazy"></button>
+            </div>
           </li>
           <li data-areas="web api">
             <div><h3>Laser Booking Online</h3><div class="kind">Booking</div></div>
             <div><p>An online booking site where customers pick a service and reserve a slot without phoning the clinic.</p>
-            <div class="tags"><span class="tag" data-a="web">Web app</span><span class="tag" data-a="api">Integrations</span></div></div>
+            <div class="tags"><span class="tag" data-a="web">Web app</span><span class="tag" data-a="api">APIs</span></div></div>
           </li>
           <li data-areas="web db">
-            <div><h3>Lavender Pharmacies</h3><div class="kind">Pharmacy</div></div>
-            <div><p>The website for a pharmacy group, built and maintained end to end.</p>
+            <div><h3>Lavender Pharmacies</h3><div class="kind">Pharmacy website and blog CMS</div></div>
+            <div><p>A responsive website for a pharmacy group with a Laravel admin dashboard for pages, blog posts, images and user access.</p>
             <div class="tags"><span class="tag" data-a="web">Web app</span><span class="tag" data-a="db">Databases</span></div></div>
-          </li>
-          <li data-areas="web server">
-            <div><h3>Al Masroor Jewellery</h3><div class="kind">Retail</div></div>
-            <div><p>A jewellery business website, from build through to hosting and going live.</p>
-            <div class="tags"><span class="tag" data-a="web">Web app</span><span class="tag" data-a="server">Servers</span></div></div>
+            <div class="shots">
+              <button class="shot" type="button" data-full="img/lavender-1.webp" data-cap="Lavender Pharmacies: Pharmacy website on desktop and mobile"><img src="img/lavender-1-t.webp" alt="Lavender Pharmacies: Pharmacy website on desktop and mobile" width="640" height="360" loading="lazy"></button>
+              <button class="shot" type="button" data-full="img/lavender-2.webp" data-cap="Lavender Pharmacies: Website with dashboard, blog management and blog page"><img src="img/lavender-2-t.webp" alt="Lavender Pharmacies: Website with dashboard, blog management and blog page" width="640" height="427" loading="lazy"></button>
+              <button class="shot" type="button" data-full="img/lavender-3.webp" data-cap="Lavender Pharmacies: Website and content management screens"><img src="img/lavender-3-t.webp" alt="Lavender Pharmacies: Website and content management screens" width="640" height="427" loading="lazy"></button>
+              <button class="shot" type="button" data-full="img/lavender-4.webp" data-cap="Lavender Pharmacies: Website and blog CMS overview"><img src="img/lavender-4-t.webp" alt="Lavender Pharmacies: Website and blog CMS overview" width="640" height="360" loading="lazy"></button>
+            </div>
           </li>
           <li data-areas="web server db">
-            <div><h3>MyDomainBook.com</h3><div class="kind">Web product</div></div>
-            <div><p>A web application I built, deployed and host myself.</p>
+            <div><h3>Al Masroor Jewellery</h3><div class="kind">Jewellery e-commerce</div></div>
+            <div><p>An online jewellery store that prices every piece from the day&#x27;s gold rate and shows the making charge and VAT openly, with collections, wishlist, cart and checkout. I built it and took it through hosting to go-live.</p>
             <div class="tags"><span class="tag" data-a="web">Web app</span><span class="tag" data-a="server">Servers</span><span class="tag" data-a="db">Databases</span></div></div>
+            <div class="shots">
+              <button class="shot" type="button" data-full="img/almasroor-1.webp" data-cap="Al Masroor Jewellery: Jewellery store with live gold rate pricing"><img src="img/almasroor-1-t.webp" alt="Al Masroor Jewellery: Jewellery store with live gold rate pricing" width="640" height="480" loading="lazy"></button>
+            </div>
+          </li>
+          <li data-areas="web server db">
+            <div><h3>MyDomainBook.com</h3><div class="kind">Mini websites for local stores</div></div>
+            <div><p>A low-cost mini website product for small shops: services, photo gallery, Google Map, WhatsApp ordering, contact form and an admin login to manage content. I built, deployed and host it myself.</p>
+            <div class="tags"><span class="tag" data-a="web">Web app</span><span class="tag" data-a="server">Servers</span><span class="tag" data-a="db">Databases</span></div></div>
+            <div class="shots">
+              <button class="shot" type="button" data-full="img/mydomainbook-1.webp" data-cap="MyDomainBook.com: Mini website solution for local stores"><img src="img/mydomainbook-1-t.webp" alt="MyDomainBook.com: Mini website solution for local stores" width="640" height="427" loading="lazy"></button>
+              <button class="shot" type="button" data-full="img/mydomainbook-2.webp" data-cap="MyDomainBook.com: About page of a sample store"><img src="img/mydomainbook-2-t.webp" alt="MyDomainBook.com: About page of a sample store" width="640" height="427" loading="lazy"></button>
+            </div>
           </li>
         </ul>
       </div>
@@ -373,6 +420,27 @@ footer .wrap{max-width:860px}
     document.getElementById("work").scrollIntoView({behavior:"smooth",block:"start"});
   });});
   reset.addEventListener("click",function(){apply(null);});
+})();
+</script>
+<dialog id="lb" aria-label="Screenshot viewer">
+  <img alt="">
+  <div class="bar"><span id="lb-cap"></span><span class="nav"><button type="button" id="lb-prev">Previous</button><button type="button" id="lb-next">Next</button><button type="button" id="lb-close">Close</button></span></div>
+</dialog>
+
+<script>
+(function(){
+  var lb=document.getElementById("lb");if(!lb||!lb.showModal)return;
+  var img=lb.querySelector("img"),cap=document.getElementById("lb-cap"),set=[],at=0;
+  function show(i){at=(i+set.length)%set.length;var b=set[at];img.src=b.dataset.full;img.alt=b.dataset.cap;
+    cap.textContent=b.dataset.cap+(set.length>1?" ("+(at+1)+" of "+set.length+")":"");
+    document.getElementById("lb-prev").hidden=document.getElementById("lb-next").hidden=set.length<2;}
+  document.querySelectorAll(".shot").forEach(function(b){b.addEventListener("click",function(){
+    set=Array.prototype.slice.call(b.parentNode.querySelectorAll(".shot"));show(set.indexOf(b));lb.showModal();});});
+  document.getElementById("lb-prev").addEventListener("click",function(){show(at-1);});
+  document.getElementById("lb-next").addEventListener("click",function(){show(at+1);});
+  document.getElementById("lb-close").addEventListener("click",function(){lb.close();});
+  lb.addEventListener("click",function(e){if(e.target===lb)lb.close();});
+  lb.addEventListener("keydown",function(e){if(e.key==="ArrowLeft")show(at-1);if(e.key==="ArrowRight")show(at+1);});
 })();
 </script>
 <script type="module" src="birds.min.js"></script>
