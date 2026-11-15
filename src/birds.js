@@ -92,13 +92,23 @@ function rrect(u, w, h, r, o) {             // point on a rounded rectangle outl
 }
 function line(o, x1, y1, x2, y2, f) { o.x = x1 + (x2 - x1) * f; o.y = y1 + (y2 - y1) * f; o.z = 0; }
 
-let visW = 14, visH = 8;
+let visW = 14, visH = 8, ringH = 1.7;
+// where the hair is in the portrait photo (fractions of its width and height): the flock starts there
+const portrait = document.querySelector('.portrait img');
+const HAIR = [];
+{ let seed = 7; const rr = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+  while (HAIR.length < N) {
+    const u = 0.2 + rr() * 0.6, v = 0.04 + rr() * 0.34;
+    const outer = ((u - 0.49) / 0.285) ** 2 + ((v - 0.28) / 0.235) ** 2, face = ((u - 0.49) / 0.2) ** 2 + ((v - 0.45) / 0.215) ** 2;
+    if (outer < 1 && face > 1 && v < 0.37) HAIR.push([u, v]);
+  } }
+const HAIR_TIME = 2.8;
 const FORMS = {
-  // hero: a loose murmuration, circling
+  // hero: a tilted ring of birds circling the portrait, behind the head and in front of the chest
   swirl(i, t, o) {
-    const r = rnd[i], a = t * (0.35 + 0.25 * r[0]) + i * 2.399, R = 1.3 + 1.6 * r[1];
-    o.x = Math.cos(a) * R * 1.2; o.z = Math.sin(a) * R;
-    o.y = Math.sin(a * 1.7 + r[2] * 6) * 0.9 * (0.4 + r[0]);
+    const r = rnd[i], a = t * (0.3 + 0.2 * r[0]) + i * 2.399, R = 1 + 0.32 * r[1], h = ringH;
+    o.x = Math.cos(a) * R * h * 1.55; o.z = Math.sin(a) * R * h * 1.2;
+    o.y = -Math.sin(a) * h * 1.25 + Math.sin(a * 2 + r[2] * 6) * 0.25;
   },
   // about: the flock spells HI
   hi(i, t, o) {
@@ -210,7 +220,7 @@ function start() {
   const scene = new THREE.Scene();
   scene.fog = new THREE.Fog(0xffffff, 13, 42);
   const camera = new THREE.PerspectiveCamera(45, 1, 0.1, 100);
-  camera.position.set(0, 0, 10);
+  camera.position.set(0, 0, 10); camera.updateMatrixWorld();
   scene.add(new THREE.HemisphereLight(0xffffff, 0x4a5a70, 1.5));
   const sunLight = new THREE.DirectionalLight(0xfff1d6, 1.6);
   sunLight.position.set(3, 6, 5); scene.add(sunLight);
@@ -341,6 +351,35 @@ function start() {
     tmp.set(px, py, 0.5).unproject(camera).sub(camera.position).normalize();
     pointer.copy(camera.position).addScaledVector(tmp, -camera.position.z / tmp.z);
   }
+  const scr = new THREE.Vector3(), hw3 = new THREE.Vector3();
+  function screenToWorld(sx, sy, out) {
+    scr.set(sx / innerWidth * 2 - 1, -(sy / innerHeight * 2 - 1), 0.5).unproject(camera).sub(camera.position).normalize();
+    out.copy(camera.position).addScaledVector(scr, -camera.position.z / scr.z);
+  }
+  let heroT = 0, hairK = 0;
+  // the portrait lives inside the 3D scene, so clouds pass behind it and the ring of birds goes around it
+  let photo = null, photoGlow = null;
+  function makePhoto() {
+    const c = document.createElement('canvas'); c.width = 720; c.height = 900;
+    const x = c.getContext('2d');
+    x.beginPath(); x.roundRect(0, 0, 720, 900, 58); x.clip();
+    x.drawImage(portrait, 0, 0, 720, 900);
+    const g = x.createLinearGradient(0, 0, 0, 900);
+    g.addColorStop(0, '#000'); g.addColorStop(0.7, '#000'); g.addColorStop(0.99, 'rgba(0,0,0,0)');
+    x.globalCompositeOperation = 'destination-in'; x.fillStyle = g; x.fillRect(0, 0, 720, 900);
+    const tex = new THREE.CanvasTexture(c); tex.colorSpace = THREE.SRGBColorSpace;
+    photo = new THREE.Mesh(new THREE.PlaneGeometry(1, 1),
+      new THREE.MeshBasicMaterial({ map: tex, transparent: true, alphaTest: 0.02, fog: false }));
+    photoGlow = new THREE.Sprite(new THREE.SpriteMaterial({ map: glowTex, color: 0x4fe6ff,
+      blending: THREE.AdditiveBlending, depthWrite: false, transparent: true, opacity: 0.4, fog: false }));
+    scene.add(photo, photoGlow);
+    document.documentElement.classList.add('photo3d');
+  }
+  if (portrait) {
+    const go = () => { try { makePhoto(); } catch (e) { console.warn(e); } };
+    if (portrait.complete && portrait.naturalWidth) go(); else portrait.addEventListener('load', go);
+  }
+  if (portrait) portrait.parentNode.addEventListener('click', () => { heroT = 0; });
   addEventListener('pointermove', e => { toWorld(e); pointerOn = e.pointerType === 'mouse' ? 2.5 : 0.6; });
   addEventListener('pointerdown', e => {
     toWorld(e);
@@ -380,6 +419,28 @@ function start() {
     const tcy = world ? 0 : (mobile ? visH * 0.2 : 0.1);
     const ease = first || reduced ? 1 : 1 - Math.exp(-4 * dt);
     S += (tS - S) * ease; cx += (tcx - cx) * ease; cy += (tcy - cy) * ease;
+    // hero: everything is anchored to the portrait photo
+    let rect = null, hair = false;
+    if (portrait && portrait.offsetWidth) rect = portrait.getBoundingClientRect();
+    if (photo) {
+      const on = !!rect && rect.bottom > -40;
+      photo.visible = on; photoGlow.visible = on && isGlow();
+      if (on) {
+        screenToWorld(rect.left + rect.width / 2, rect.top + rect.height / 2, hw3);
+        const w = rect.width / innerWidth * visW;
+        photo.position.set(hw3.x, hw3.y, 0); photo.scale.set(w, w * rect.height / rect.width, 1);
+        photo.material.color.setScalar(isGlow() ? 0.9 : 1);
+        photoGlow.position.set(hw3.x, hw3.y + w * 0.1, -0.3); photoGlow.scale.setScalar(w * 2.7);
+      }
+    }
+    if (name === 'swirl' && rect) {
+      heroT += dt;
+      hair = !reduced && heroT < HAIR_TIME;
+      screenToWorld(rect.left + rect.width / 2, rect.top + rect.height / 2, hw3);
+      const pw = rect.width / innerWidth * visW / 2;
+      S = Math.min(1.05, Math.max(0.42, pw / 1.7)); ringH = pw / S; cx = hw3.x; cy = hw3.y;
+    } else heroT = 0;
+    hairK += ((hair ? 1 : 0) - hairK) * (first ? 1 : 1 - Math.exp(-5 * dt));
 
     const glow = isGlow();
     for (const pal of PAL) {
@@ -404,7 +465,12 @@ function start() {
       const b = birds[i], p = b.g.position;
       o.flap = 1; o.fx = 1; o.fz = 0.2; o.z = 0;
       form(i, t, o);
-      const tx = cx + o.x * S, ty = cy + o.y * S, tz = o.z * S;
+      let tx = cx + o.x * S, ty = cy + o.y * S, tz = o.z * S;
+      if (hair) {                       // sit where the hair is
+        screenToWorld(rect.left + HAIR[i][0] * rect.width, rect.top + HAIR[i][1] * rect.height, hw3);
+        tx = hw3.x; ty = hw3.y; tz = 0.05; o.flap = 0; o.fx = rnd[i][0] > 0.5 ? 1 : -1; o.fz = 0.7;
+        if (first) { p.set(tx, ty, tz); b.fly = 0; }
+      }
       if (reduced) { p.set(tx, ty, tz); b.vel.set(0, 0, 0); }
       else {
         acc.set(tx - p.x, ty - p.y, tz - p.z).multiplyScalar(7).addScaledVector(b.vel, -3.4);
@@ -422,7 +488,7 @@ function start() {
       if (sp > 0.5) dir.copy(b.vel).multiplyScalar(1 / sp); else dir.set(o.fx, 0, o.fz).normalize();
       dummy.position.copy(p); look.copy(p).add(dir); dummy.lookAt(look);
       b.g.quaternion.slerp(dummy.quaternion, reduced ? 1 : 1 - Math.exp(-7 * dt));
-      b.g.scale.setScalar(b.size * 0.55 * (0.55 + 0.45 * S));
+      b.g.scale.setScalar(b.size * 0.55 * (0.55 + 0.45 * S) * (1 - 0.35 * hairK));
       // wings: flap in the air, fold when perched
       const air = Math.max(o.flap, Math.min(1, Math.max(0, (sp - 0.4) / 1.2)));
       b.fly += (air - b.fly) * (reduced ? 1 : 1 - Math.exp(-6 * dt));
@@ -456,7 +522,7 @@ function start() {
     if (!reduced) {
       camera.position.x += (px * 0.5 - camera.position.x) * 0.04;
       camera.position.y += (py * 0.3 - camera.position.y) * 0.04;
-      camera.lookAt(0, 0, 0);
+      camera.lookAt(0, 0, 0); camera.updateMatrixWorld();
     }
     renderer.render(scene, camera);
     first = false;
