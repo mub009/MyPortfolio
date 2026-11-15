@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Mubashir Palakkan Portfolio</title>
 <meta name="description" content="Mubashir Palakkan, full stack PHP and Laravel developer who also runs the servers. APIs, MySQL, healthcare integrations, Linux and AI features.">
+<script>try{if(localStorage.getItem("sky")!=="day")document.documentElement.classList.add("glow")}catch(e){document.documentElement.classList.add("glow")}</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,650;1,9..144,400&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
@@ -14,10 +15,31 @@
 :root{
   --ink:#12242a; --muted:#44585c; --page:rgba(249,252,252,.9); --rule:rgba(18,36,42,.14);
   --teal:#0b6e75; --orange:#c4530f; --night:0;
+  --soft:#2c4146; --chip:rgba(255,255,255,.7); --on:#fff; --bar:rgba(249,252,252,.78);
+  --halo:0 0 14px rgba(255,255,255,.75),0 0 3px rgba(255,255,255,.6);
   --display:"Fraunces",Georgia,serif;
   --body:"Instrument Sans","Segoe UI",system-ui,sans-serif;
   color-scheme:light;
 }
+/* glow night: dark luminous sky, light text on dark glass */
+html.glow{--ink:#eaf8fb; --muted:#a8c4cd; --page:rgba(7,18,38,.74); --rule:rgba(130,230,255,.24);
+  --teal:#6ff0e0; --orange:#ffb37a; --soft:#d2e6ec; --chip:rgba(120,220,255,.1); --on:#06202a; --bar:rgba(6,14,32,.72);
+  --halo:0 0 16px rgba(4,10,28,.9),0 0 4px rgba(4,10,28,.8); color-scheme:dark}
+html.glow body{background:#050b24}
+html.glow .page,html.glow .sheet{box-shadow:0 0 30px rgba(90,230,255,.1),inset 0 0 0 1px rgba(130,230,255,.06)}
+html.glow .btn.solid{background:#6ff0e0;border-color:#6ff0e0;color:#06202a}
+html.glow .btn.solid:hover{background:#b6fff4}
+html.glow .btn.line{background:rgba(255,255,255,.06)}
+html.glow .species{text-shadow:0 0 12px rgba(255,150,90,.5)}
+html.glow .entry h2,html.glow .sheet h2,html.glow .hero-text h1{text-shadow:0 0 22px rgba(110,240,255,.35)}
+.aurora{position:absolute;inset:-10% -20% 45% -20%;opacity:0;filter:blur(46px);transition:opacity .6s;
+  background:linear-gradient(100deg,transparent 5%,rgba(60,255,200,.5) 22%,rgba(70,160,255,.35) 40%,transparent 52%,rgba(190,90,255,.45) 70%,rgba(60,255,220,.3) 85%,transparent 96%);
+  animation:aurora 16s ease-in-out infinite alternate}
+html.glow .aurora{opacity:.5}
+@keyframes aurora{from{transform:translateX(-6%) skewX(-8deg) scaleY(.9)}to{transform:translateX(6%) skewX(10deg) scaleY(1.15)}}
+@media (prefers-reduced-motion:reduce){.aurora{animation:none}}
+.mode{font:inherit;font-size:.86rem;font-weight:600;color:var(--ink);background:var(--chip);border:1px solid var(--rule);border-radius:999px;padding:4px 12px;cursor:pointer}
+.mode:hover{border-color:var(--teal)}
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
 @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important}}
@@ -43,7 +65,7 @@ p{margin:0}
 .wrap{max-width:1120px;margin:0 auto;padding:0 24px}
 
 /* top bar */
-.top{position:sticky;top:0;z-index:5;background:rgba(249,252,252,.78);backdrop-filter:blur(10px);border-bottom:1px solid var(--rule)}
+.top{position:sticky;top:0;z-index:5;background:var(--bar);backdrop-filter:blur(10px);border-bottom:1px solid var(--rule)}
 .top .wrap{display:flex;flex-wrap:wrap;gap:6px 20px;align-items:center;justify-content:space-between;padding-top:10px;padding-bottom:10px}
 .brand{font-family:var(--display);font-weight:650;font-size:1.1rem;color:var(--ink);text-decoration:none}
 .top nav{display:flex;flex-wrap:wrap;gap:4px 18px}
@@ -58,16 +80,16 @@ p{margin:0}
 .act.birds-left .page{justify-self:end}
 
 /* hero */
-.hero-text{max-width:560px;text-shadow:0 0 14px rgba(255,255,255,.75),0 0 3px rgba(255,255,255,.6)}
+.hero-text{max-width:560px;text-shadow:var(--halo)}
 .hero-text .btn{text-shadow:none}
 .where{color:var(--muted);font-size:.95rem;margin-bottom:18px}
 .hero-text h1{font-size:clamp(2.4rem,5.4vw,4.3rem);letter-spacing:-.015em}
-.lede{font-size:1.12rem;color:#2c4146;margin:22px 0 14px;max-width:52ch}
-.how{font-family:var(--display);font-style:italic;font-size:1.05rem;color:#2c4146;max-width:46ch}
+.lede{font-size:1.12rem;color:var(--soft);margin:22px 0 14px;max-width:52ch}
+.how{font-family:var(--display);font-style:italic;font-size:1.05rem;color:var(--soft);max-width:46ch}
 html:not(.has3d) .how,html:not(.has3d) .watch{display:none}
 .cta{display:flex;flex-wrap:wrap;gap:12px;margin-top:26px}
 .btn{display:inline-block;padding:12px 20px;border-radius:999px;font-weight:600;text-decoration:none;border:2px solid var(--ink)}
-.btn.solid{background:var(--ink);color:#fff}
+.btn.solid{background:var(--ink);color:#fff;text-shadow:none}
 .btn.line{color:var(--ink);background:rgba(255,255,255,.5)}
 .btn:hover{border-color:var(--teal)}
 .btn.solid:hover{background:var(--teal)}
@@ -79,7 +101,7 @@ html:not(.has3d) .how,html:not(.has3d) .watch{display:none}
 .entry p + p{margin-top:10px}
 .does{color:var(--muted)}
 .chips{display:flex;flex-wrap:wrap;gap:6px;list-style:none;padding:0;margin:16px 0 0}
-.chips li,.tag{font-size:.82rem;padding:3px 10px;border-radius:999px;border:1px solid var(--rule);background:rgba(255,255,255,.7)}
+.chips li,.tag{font-size:.82rem;padding:3px 10px;border-radius:999px;border:1px solid var(--rule);background:var(--chip)}
 .watch{margin-top:16px!important;padding-top:14px;border-top:1px dashed var(--rule);font-size:.93rem;color:var(--muted)}
 .see{margin-top:14px;font:inherit;font-weight:600;font-size:.93rem;color:var(--teal);background:none;border:0;padding:0;cursor:pointer;text-decoration:underline;text-underline-offset:3px}
 .see:hover{color:var(--ink)}
@@ -90,15 +112,15 @@ html:not(.has3d) .how,html:not(.has3d) .watch{display:none}
 .sheet h2{font-size:clamp(1.7rem,3.2vw,2.3rem)}
 .sheet .sub{color:var(--muted);margin-top:8px;max-width:56ch}
 .filterbar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:22px 0 4px;color:var(--muted);font-size:.93rem}
-.reset{font:inherit;font-size:.86rem;background:#fff;border:1px solid var(--rule);color:var(--ink);padding:4px 12px;border-radius:999px;cursor:pointer}
+.reset{font:inherit;font-size:.86rem;background:var(--chip);border:1px solid var(--rule);color:var(--ink);padding:4px 12px;border-radius:999px;cursor:pointer}
 .work{list-style:none;margin:0;padding:0}
 .work li{display:grid;grid-template-columns:minmax(150px,220px) 1fr;gap:6px 28px;padding:18px 0;border-top:1px solid var(--rule);transition:opacity .2s}
 .work li.dim{opacity:.3}
 .work h3{font-size:1.18rem}
 .work .kind{color:var(--muted);font-size:.9rem;margin-top:2px}
-.work p{color:#2c4146}
+.work p{color:var(--soft)}
 .work .tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
-.tag.on{background:var(--teal);border-color:var(--teal);color:#fff}
+.tag.on{background:var(--teal);border-color:var(--teal);color:var(--on)}
 .shots{grid-column:1/-1;display:flex;gap:10px;overflow-x:auto;padding:6px 2px 10px;scroll-snap-type:x proximity}
 .shot{flex:0 0 auto;padding:0;border:1px solid var(--rule);border-radius:6px;overflow:hidden;background:#fff;cursor:zoom-in;scroll-snap-align:start;line-height:0}
 .shot img{height:150px;width:auto;display:block}
@@ -141,7 +163,7 @@ footer .wrap{max-width:860px}
 </head>
 <body>
 
-<div class="sky" aria-hidden="true"><div class="stars"></div><div class="sun"></div><div class="moon"></div></div>
+<div class="sky" aria-hidden="true"><div class="aurora"></div><div class="stars"></div><div class="sun"></div><div class="moon"></div></div>
 <canvas id="flock" aria-hidden="true"></canvas>
 
 <header class="top">
@@ -154,6 +176,7 @@ footer .wrap{max-width:860px}
       <a href="#path">Experience</a>
       <a href="#contact">Contact</a>
     </nav>
+    <button class="mode" type="button" id="mode">Day sky</button>
   </div>
 </header>
 
@@ -420,6 +443,18 @@ footer .wrap{max-width:860px}
     document.getElementById("work").scrollIntoView({behavior:"smooth",block:"start"});
   });});
   reset.addEventListener("click",function(){apply(null);});
+})();
+</script>
+<script>
+(function(){
+  var b=document.getElementById("mode"),r=document.documentElement;
+  function label(){b.textContent=r.classList.contains("glow")?"Day sky":"Glow night";}
+  label();
+  b.addEventListener("click",function(){
+    var g=r.classList.toggle("glow");
+    try{localStorage.setItem("sky",g?"glow":"day");}catch(e){}
+    label(); if(window.__sky)window.__sky();
+  });
 })();
 </script>
 <dialog id="lb" aria-label="Screenshot viewer">

@@ -27,6 +27,14 @@ const SKY = [
   ['#0a1030', '#27305e', 1],    // contact: night
 ].map(([a, b, n]) => ({ top: new THREE.Color(a), bot: new THREE.Color(b), night: n }));
 
+// glow night: the whole page under a dark, luminous sky
+const SKYG = [
+  ['#050b24', '#0b3550'], ['#06102c', '#0a3f55'], ['#071433', '#0b4a58'], ['#08183a', '#0d4f5c'],
+  ['#0a1640', '#124a66'], ['#0d1445', '#1b3f70'], ['#120f44', '#2a3577'], ['#170d42', '#3a2d78'],
+  ['#1a0c3c', '#462a6e'], ['#120a30', '#2d2360'], ['#080820', '#161a48'],
+].map(([a, b]) => ({ top: new THREE.Color(a), bot: new THREE.Color(b), night: 1 }));
+const isGlow = () => document.documentElement.classList.contains('glow');
+
 const cTop = new THREE.Color(), cBot = new THREE.Color(), cMid = new THREE.Color();
 let centers = [], idxF = 0, active = 0, night = 0;
 
@@ -40,7 +48,8 @@ function readScroll() {
   const f = Math.min(1, Math.max(0, (y - centers[k]) / (centers[k + 1] - centers[k] || 1)));
   idxF = k + f;
   active = Math.round(idxF);
-  const a = SKY[Math.min(k, SKY.length - 1)], b = SKY[Math.min(k + 1, SKY.length - 1)];
+  const P = isGlow() ? SKYG : SKY;
+  const a = P[Math.min(k, P.length - 1)], b = P[Math.min(k + 1, P.length - 1)];
   cTop.copy(a.top).lerp(b.top, f);
   cBot.copy(a.bot).lerp(b.bot, f);
   cMid.copy(cTop).lerp(cBot, 0.6);
@@ -56,6 +65,7 @@ function readScroll() {
   document.documentElement.style.setProperty('--night', String(night));
 }
 measure(); readScroll();
+window.__sky = readScroll;
 addEventListener('scroll', readScroll, { passive: true });
 addEventListener('resize', () => { measure(); readScroll(); });
 addEventListener('load', () => { measure(); readScroll(); });
@@ -217,22 +227,59 @@ function start() {
     [0, 0, 0.17, 0, 0, -0.15, 0.66, 0, -0.12, 0, 0, 0.17, 0.66, 0, -0.12, 0.3, 0, 0.1], 3));
   wingGeo.computeVertexNormals();
 
-  const PAL = [['#12242a', '#f4ecdc'], ['#0b6e75', '#7fe3d2'], ['#d9631a', '#ffb066']]
-    .map(([d, n]) => ({ day: new THREE.Color(d), night: new THREE.Color(n),
+  const PAL = [['#12242a', '#f4ecdc', '#62f2ff'], ['#0b6e75', '#7fe3d2', '#8dffb5'], ['#d9631a', '#ffb066', '#ff86e0']]
+    .map(([d, n, g]) => ({ day: new THREE.Color(d), night: new THREE.Color(n), glow: new THREE.Color(g),
       mat: new THREE.MeshLambertMaterial({ color: d, flatShading: true, side: THREE.DoubleSide }) }));
+  // soft round light used for halos, trails and drifting sparks
+  const gc = document.createElement('canvas'); gc.width = gc.height = 64;
+  const gx = gc.getContext('2d'), gr = gx.createRadialGradient(32, 32, 0, 32, 32, 32);
+  gr.addColorStop(0, 'rgba(255,255,255,1)'); gr.addColorStop(0.25, 'rgba(255,255,255,.55)'); gr.addColorStop(1, 'rgba(255,255,255,0)');
+  gx.fillStyle = gr; gx.fillRect(0, 0, 64, 64);
+  const glowTex = new THREE.CanvasTexture(gc);
+  for (const pal of PAL) pal.halo = new THREE.SpriteMaterial({ map: glowTex, color: pal.glow,
+    blending: THREE.AdditiveBlending, depthWrite: false, transparent: true, opacity: 0.3 });
 
   const birds = [];
   for (let i = 0; i < N; i++) {
-    const r = rnd[i], mat = PAL[r[2] < 0.72 ? 0 : r[2] < 0.86 ? 1 : 2].mat;
+    const r = rnd[i], pal = PAL[r[2] < 0.6 ? 0 : r[2] < 0.82 ? 1 : 2], mat = pal.mat;
     const g = new THREE.Group();
     const rw = new THREE.Mesh(wingGeo, mat), lw = new THREE.Mesh(wingGeo, mat);
     lw.scale.x = -1;
     g.add(new THREE.Mesh(bodyGeo, mat), rw, lw);
+    const halo = new THREE.Sprite(pal.halo); halo.scale.setScalar(1.5); g.add(halo);
     g.position.set((r[0] - 0.5) * 30, 6 + r[1] * 6, -4 - r[2] * 8);   // they fly in from above
     scene.add(g);
-    birds.push({ g, rw, lw, vel: new THREE.Vector3(), size: 0.8 + r[1] * 0.45,
+    birds.push({ g, rw, lw, halo, pal, vel: new THREE.Vector3(), size: 0.8 + r[1] * 0.45,
       freq: 9 + r[0] * 5, ph: r[2] * TAU, fly: 1 });
   }
+
+  // light trails behind every bird
+  const TR = 12, trailPos = new Float32Array(N * TR * 3), trailCol = new Float32Array(N * TR * 3);
+  for (let i = 0; i < N; i++) for (let k = 0; k < TR; k++) {
+    const f = Math.pow(1 - k / TR, 2) * 0.9, c = birds[i].pal.glow, q = (i * TR + k) * 3, p = birds[i].g.position;
+    trailCol[q] = c.r * f; trailCol[q + 1] = c.g * f; trailCol[q + 2] = c.b * f;
+    trailPos[q] = p.x; trailPos[q + 1] = p.y; trailPos[q + 2] = p.z;
+  }
+  const trailGeo = new THREE.BufferGeometry();
+  trailGeo.setAttribute('position', new THREE.BufferAttribute(trailPos, 3));
+  trailGeo.setAttribute('color', new THREE.BufferAttribute(trailCol, 3));
+  const trails = new THREE.Points(trailGeo, new THREE.PointsMaterial({ size: 0.2, map: glowTex, vertexColors: true,
+    blending: THREE.AdditiveBlending, depthWrite: false, transparent: true }));
+  trails.frustumCulled = false; scene.add(trails);
+  // sparks drifting up through the night
+  const SP = 260, spPos = new Float32Array(SP * 3), spCol = new Float32Array(SP * 3), spSeed = new Float32Array(SP);
+  for (let i = 0; i < SP; i++) {
+    spPos[i * 3] = (Math.random() - 0.5) * 30; spPos[i * 3 + 1] = (Math.random() - 0.5) * 13; spPos[i * 3 + 2] = -11 + Math.random() * 14;
+    const c = PAL[i % 3].glow, f = 0.35 + Math.random() * 0.65;
+    spCol[i * 3] = c.r * f; spCol[i * 3 + 1] = c.g * f; spCol[i * 3 + 2] = c.b * f; spSeed[i] = Math.random() * 10;
+  }
+  const spGeo = new THREE.BufferGeometry();
+  spGeo.setAttribute('position', new THREE.BufferAttribute(spPos, 3));
+  spGeo.setAttribute('color', new THREE.BufferAttribute(spCol, 3));
+  const spores = new THREE.Points(spGeo, new THREE.PointsMaterial({ size: 0.14, map: glowTex, vertexColors: true,
+    blending: THREE.AdditiveBlending, depthWrite: false, transparent: true }));
+  spores.frustumCulled = false; scene.add(spores);
+  let trailT = 0;
 
   // clouds for depth
   const cloudMat = new THREE.MeshLambertMaterial({ color: 0xffffff, flatShading: true, transparent: true, opacity: 0.9 });
@@ -254,7 +301,9 @@ function start() {
 
   // props that appear with a formation
   const props = {};
-  const flat = c => new THREE.MeshLambertMaterial({ color: c, flatShading: true });
+  const propMats = [];
+  const flat = (c, g) => { const m = new THREE.MeshLambertMaterial({ color: c, flatShading: true });
+    m.userData.g = new THREE.Color(g || c); propMats.push(m); return m; };
   { // nest: a twig ring and three eggs
     const g = new THREE.Group(); g.rotation.x = 0.42;
     const twig = new THREE.Mesh(new THREE.TorusGeometry(0.95, 0.2, 5, 14).rotateX(Math.PI / 2), flat('#8a5a2b'));
@@ -272,7 +321,7 @@ function start() {
     props.courier = g;
   }
   { // three wires between two poles
-    const g = new THREE.Group(), ink = flat('#22343a');
+    const g = new THREE.Group(), ink = flat('#22343a', '#3fd0e0');
     for (let w = 0; w < 3; w++) {
       const pts = [];
       for (let k = 0; k <= 16; k++) { const x = -2.85 + k * 5.7 / 16; pts.push(new THREE.Vector3(x, wireY(w, x), 0)); }
@@ -332,8 +381,14 @@ function start() {
     const ease = first || reduced ? 1 : 1 - Math.exp(-4 * dt);
     S += (tS - S) * ease; cx += (tcx - cx) * ease; cy += (tcy - cy) * ease;
 
-    for (const pal of PAL) pal.mat.color.copy(pal.day).lerp(pal.night, night);
-    cloudMat.opacity = 0.9 - 0.75 * night;
+    const glow = isGlow();
+    for (const pal of PAL) {
+      if (glow) { pal.mat.color.set(0x0c2230); pal.mat.emissive.copy(pal.glow).multiplyScalar(0.85); }
+      else { pal.mat.color.copy(pal.day).lerp(pal.night, night); pal.mat.emissive.set(0); }
+    }
+    for (const m of propMats) m.emissive.copy(m.userData.g).multiplyScalar(glow ? 0.5 : 0);
+    trails.visible = spores.visible = glow;
+    cloudMat.opacity = glow ? 0.1 : 0.9 - 0.75 * night;
     fogC.copy(cMid); scene.fog.color.copy(fogC);
     sunLight.intensity = 1.6 - night;
 
@@ -374,6 +429,24 @@ function start() {
       const flapA = reduced ? 0.2 : Math.sin(t * b.freq + b.ph) * 0.8;
       const ang = -1.2 + (flapA + 1.2) * b.fly;
       b.rw.rotation.z = ang; b.lw.rotation.z = -ang;
+      b.halo.visible = glow;
+    }
+    if (glow) {
+      trailT += dt; const shift = trailT > 0.03; if (shift) trailT = 0;
+      for (let i = 0; i < N; i++) {
+        const q = i * TR * 3, p = birds[i].g.position;
+        if (shift) trailPos.copyWithin(q + 3, q, q + (TR - 1) * 3);
+        trailPos[q] = p.x; trailPos[q + 1] = p.y; trailPos[q + 2] = p.z;
+      }
+      trailGeo.attributes.position.needsUpdate = true;
+      if (!reduced) {
+        for (let i = 0; i < SP; i++) {
+          spPos[i * 3] += Math.sin(t * 0.6 + spSeed[i]) * 0.12 * dt;
+          spPos[i * 3 + 1] += (0.12 + (spSeed[i] % 1) * 0.3) * dt;
+          if (spPos[i * 3 + 1] > 6.5) spPos[i * 3 + 1] = -6.5;
+        }
+        spGeo.attributes.position.needsUpdate = true;
+      }
     }
 
     for (const c of clouds) {
