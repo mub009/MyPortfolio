@@ -7,118 +7,130 @@
 <meta name="description" content="Mubashir Palakkan, full stack PHP and Laravel developer who also runs the servers. APIs, MySQL, healthcare integrations, Linux and AI features.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,650;1,9..144,400&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
-/* Layout idea: one left-aligned column with a mono "status line" motif borrowed from a server console;
-   skill areas act as filters that light up the projects they were used on. */
+/* Concept: a bird field guide. The page is one sky that runs from dawn to night as you scroll,
+   and a flock of 3D birds regroups to act out each skill. Text sits on pale "guide pages". */
 :root{
-  --bg:#f3f6f4; --surface:#ffffff; --ink:#11221f; --muted:#52645f; --line:#d5dedb;
-  --accent:#0b6e5f; --accent-soft:#dcefea; --signal:#b8720f;
-  --display:"Bricolage Grotesque","Segoe UI",system-ui,sans-serif;
-  --body:"IBM Plex Sans","Segoe UI",system-ui,sans-serif;
-  --mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+  --ink:#12242a; --muted:#44585c; --page:rgba(249,252,252,.9); --rule:rgba(18,36,42,.14);
+  --teal:#0b6e75; --orange:#c4530f; --night:0;
+  --display:"Fraunces",Georgia,serif;
+  --body:"Instrument Sans","Segoe UI",system-ui,sans-serif;
   color-scheme:light;
-}
-@media (prefers-color-scheme:dark){
-  :root:not([data-theme="light"]){
-    --bg:#0d1615; --surface:#14201e; --ink:#e4eeeb; --muted:#9bb0aa; --line:#273834;
-    --accent:#45c4a9; --accent-soft:#163a33; --signal:#e6a84a; color-scheme:dark;
-  }
-}
-:root[data-theme="dark"]{
-  --bg:#0d1615; --surface:#14201e; --ink:#e4eeeb; --muted:#9bb0aa; --line:#273834;
-  --accent:#45c4a9; --accent-soft:#163a33; --signal:#e6a84a; color-scheme:dark;
 }
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
 @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important}}
-body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);font-size:17px;line-height:1.6}
-a{color:var(--accent)}
-a:focus-visible,button:focus-visible{outline:2px solid var(--signal);outline-offset:3px;border-radius:4px}
-.wrap{max-width:1040px;margin:0 auto;padding:0 20px}
-h1,h2,h3{font-family:var(--display);line-height:1.1;text-wrap:balance;margin:0}
-.mono{font-family:var(--mono);font-size:.8rem;letter-spacing:.02em}
+body{margin:0;color:var(--ink);font-family:var(--body);font-size:17px;line-height:1.6;background:#a9cfe0}
+a{color:var(--teal)}
+a:focus-visible,button:focus-visible{outline:3px solid var(--orange);outline-offset:3px;border-radius:4px}
+h1,h2,h3{font-family:var(--display);font-weight:650;line-height:1.08;text-wrap:balance;margin:0}
+p{margin:0}
+
+/* the sky */
+.sky{position:fixed;inset:0;z-index:0;--top:#a9cfe0;--bot:#ffe6cf;background:linear-gradient(var(--top),var(--bot));overflow:hidden}
+.stars{position:absolute;inset:0;opacity:0;background-image:
+  radial-gradient(1.5px 1.5px at 20px 30px,#fff,transparent),radial-gradient(1px 1px at 90px 110px,#fff,transparent),
+  radial-gradient(1.5px 1.5px at 160px 60px,#fff,transparent),radial-gradient(1px 1px at 210px 170px,#fff,transparent),
+  radial-gradient(1px 1px at 60px 190px,#fff,transparent),radial-gradient(1.5px 1.5px at 130px 150px,#fff,transparent);
+  background-size:240px 220px}
+.sun{position:absolute;left:0;top:0;width:170px;height:170px;border-radius:50%;transform:translate(10vw,78vh) translate(-50%,-50%);
+  background:radial-gradient(circle,#fffbe6 0 30%,rgba(255,225,150,.6) 33%,rgba(255,225,150,0) 68%)}
+.moon{position:absolute;right:12vw;top:15vh;width:56px;height:56px;border-radius:50%;opacity:0;box-shadow:inset -15px 6px 0 0 #f4ecdc}
+#flock{position:fixed;inset:0;width:100%;height:100%;z-index:1;pointer-events:none;display:block}
+.top,main,footer{position:relative;z-index:2}
+
+.wrap{max-width:1120px;margin:0 auto;padding:0 24px}
 
 /* top bar */
-.top{position:sticky;top:0;z-index:5;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
-.top .wrap{display:flex;flex-wrap:wrap;gap:8px 20px;align-items:center;justify-content:space-between;padding-top:12px;padding-bottom:12px}
-.brand{font-family:var(--display);font-weight:700;color:var(--ink);text-decoration:none}
+.top{position:sticky;top:0;z-index:5;background:rgba(249,252,252,.78);backdrop-filter:blur(10px);border-bottom:1px solid var(--rule)}
+.top .wrap{display:flex;flex-wrap:wrap;gap:6px 20px;align-items:center;justify-content:space-between;padding-top:10px;padding-bottom:10px}
+.brand{font-family:var(--display);font-weight:650;font-size:1.1rem;color:var(--ink);text-decoration:none}
 .top nav{display:flex;flex-wrap:wrap;gap:4px 18px}
-.top nav a{color:var(--muted);text-decoration:none;font-size:.92rem}
-.top nav a:hover{color:var(--accent)}
+.top nav a{color:var(--muted);text-decoration:none;font-size:.94rem}
+.top nav a:hover{color:var(--teal)}
+
+/* an act: one screen, text on one side, the flock on the other */
+.act{min-height:100vh;min-height:100svh;display:flex;align-items:center;padding:72px 0}
+.act .wrap{width:100%;display:grid;grid-template-columns:1fr 1fr;gap:32px}
+.act.birds-left .wrap > *{grid-column:2}
+.page{background:var(--page);backdrop-filter:blur(8px);border:1px solid var(--rule);border-radius:6px;padding:30px 32px;max-width:520px}
+.act.birds-left .page{justify-self:end}
 
 /* hero */
-.hero{padding:64px 0 48px}
-.status{display:inline-flex;flex-wrap:wrap;gap:6px 14px;align-items:center;color:var(--muted);margin-bottom:22px}
-.dot{width:9px;height:9px;border-radius:50%;background:var(--accent);box-shadow:0 0 0 4px var(--accent-soft)}
-.hero h1{font-size:clamp(2.3rem,7vw,4.4rem);font-weight:700;letter-spacing:-.02em;max-width:15ch}
-.hero h1 em{font-style:normal;color:var(--accent)}
-.lede{max-width:60ch;font-size:1.12rem;color:var(--muted);margin:22px 0 28px}
-.cta{display:flex;flex-wrap:wrap;gap:12px}
-.btn{display:inline-block;padding:12px 20px;border-radius:8px;font-weight:600;text-decoration:none;border:1.5px solid var(--accent)}
-.btn.solid{background:var(--accent);color:var(--bg)}
-.btn.ghost{color:var(--accent)}
-.facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:12px;overflow:hidden;margin-top:44px}
-.facts div{background:var(--surface);padding:18px}
-.facts b{display:block;font-family:var(--display);font-size:1.7rem;font-variant-numeric:tabular-nums}
-.facts span{color:var(--muted);font-size:.9rem}
+.hero-text{max-width:560px;text-shadow:0 0 14px rgba(255,255,255,.75),0 0 3px rgba(255,255,255,.6)}
+.hero-text .btn{text-shadow:none}
+.where{color:var(--muted);font-size:.95rem;margin-bottom:18px}
+.hero-text h1{font-size:clamp(2.4rem,5.4vw,4.3rem);letter-spacing:-.015em}
+.lede{font-size:1.12rem;color:#2c4146;margin:22px 0 14px;max-width:52ch}
+.how{font-family:var(--display);font-style:italic;font-size:1.05rem;color:#2c4146;max-width:46ch}
+html:not(.has3d) .how,html:not(.has3d) .watch{display:none}
+.cta{display:flex;flex-wrap:wrap;gap:12px;margin-top:26px}
+.btn{display:inline-block;padding:12px 20px;border-radius:999px;font-weight:600;text-decoration:none;border:2px solid var(--ink)}
+.btn.solid{background:var(--ink);color:#fff}
+.btn.line{color:var(--ink);background:rgba(255,255,255,.5)}
+.btn:hover{border-color:var(--teal)}
+.btn.solid:hover{background:var(--teal)}
 
-section{padding:56px 0;border-top:1px solid var(--line)}
-.head{display:flex;flex-wrap:wrap;gap:8px 24px;align-items:baseline;justify-content:space-between;margin-bottom:28px}
-.head h2{font-size:clamp(1.6rem,4vw,2.3rem)}
-.head p{margin:0;color:var(--muted);max-width:48ch}
+/* field guide entry */
+.species{font-family:var(--display);font-style:italic;font-size:1.05rem;color:var(--orange);margin-bottom:6px}
+.entry h2{font-size:clamp(1.7rem,3.2vw,2.3rem);margin-bottom:14px}
+.habit{font-family:var(--display);font-size:1.12rem;line-height:1.45;margin-bottom:12px}
+.entry p + p{margin-top:10px}
+.does{color:var(--muted)}
+.chips{display:flex;flex-wrap:wrap;gap:6px;list-style:none;padding:0;margin:16px 0 0}
+.chips li,.tag{font-size:.82rem;padding:3px 10px;border-radius:999px;border:1px solid var(--rule);background:rgba(255,255,255,.7)}
+.watch{margin-top:16px!important;padding-top:14px;border-top:1px dashed var(--rule);font-size:.93rem;color:var(--muted)}
+.see{margin-top:14px;font:inherit;font-weight:600;font-size:.93rem;color:var(--teal);background:none;border:0;padding:0;cursor:pointer;text-decoration:underline;text-underline-offset:3px}
+.see:hover{color:var(--ink)}
 
-/* about */
-.about{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:28px}
-.about p{margin:0 0 14px;max-width:62ch}
-.note{background:var(--surface);border:1px solid var(--line);border-left:4px solid var(--signal);border-radius:10px;padding:18px 20px;align-self:start}
-.note p{margin:0;color:var(--muted)}
-.note strong{color:var(--ink)}
+/* long sections: one wide guide page */
+.long{padding:90px 0}
+.sheet{background:var(--page);backdrop-filter:blur(8px);border:1px solid var(--rule);border-radius:6px;padding:34px 36px;max-width:860px;margin:0 auto}
+.sheet h2{font-size:clamp(1.7rem,3.2vw,2.3rem)}
+.sheet .sub{color:var(--muted);margin-top:8px;max-width:56ch}
+.filterbar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:22px 0 4px;color:var(--muted);font-size:.93rem}
+.reset{font:inherit;font-size:.86rem;background:#fff;border:1px solid var(--rule);color:var(--ink);padding:4px 12px;border-radius:999px;cursor:pointer}
+.work{list-style:none;margin:0;padding:0}
+.work li{display:grid;grid-template-columns:minmax(150px,220px) 1fr;gap:6px 28px;padding:18px 0;border-top:1px solid var(--rule);transition:opacity .2s}
+.work li.dim{opacity:.3}
+.work h3{font-size:1.18rem}
+.work .kind{color:var(--muted);font-size:.9rem;margin-top:2px}
+.work p{color:#2c4146}
+.work .tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.tag.on{background:var(--teal);border-color:var(--teal);color:#fff}
+.path{list-style:none;margin:20px 0 0;padding:0}
+.path li{display:grid;grid-template-columns:minmax(120px,170px) 1fr;gap:6px 28px;padding:18px 0;border-top:1px solid var(--rule)}
+.path .when{color:var(--orange);font-weight:600;font-variant-numeric:tabular-nums}
+.path h3{font-size:1.15rem}
+.path .place{color:var(--muted);font-size:.95rem}
+.path p{margin-top:6px}
 
-/* skills */
-.areas{display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:16px}
-.area{text-align:left;font:inherit;color:inherit;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:20px;cursor:pointer;display:flex;flex-direction:column;gap:10px;transition:border-color .15s,transform .15s}
-.area:hover{border-color:var(--accent);transform:translateY(-2px)}
-.area[aria-pressed="true"]{border-color:var(--accent);background:var(--accent-soft)}
-.area .mono{color:var(--signal)}
-.area h3{font-size:1.25rem}
-.area p{margin:0;color:var(--muted);font-size:.96rem}
-.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:auto;padding-top:6px}
-.chip{font-family:var(--mono);font-size:.74rem;padding:3px 8px;border-radius:999px;border:1px solid var(--line);background:var(--bg);color:var(--ink)}
-.hint{color:var(--muted);font-size:.9rem;margin-top:16px}
+.links{list-style:none;padding:0;margin:18px 0 0}
+.links li{border-top:1px solid var(--rule)}
+.links a{display:flex;flex-wrap:wrap;justify-content:space-between;gap:2px 16px;padding:13px 0;text-decoration:none;color:var(--ink);overflow-wrap:anywhere}
+.links a span{color:var(--muted)}
+.links a:hover{color:var(--teal)}
 
-/* work */
-.filterbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:20px}
-.filterbar span{color:var(--muted)}
-.reset{font:inherit;font-size:.85rem;background:none;border:1px solid var(--line);color:var(--ink);padding:5px 12px;border-radius:999px;cursor:pointer}
-.work{display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:16px}
-.card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:20px;display:flex;flex-direction:column;gap:10px;transition:opacity .2s,border-color .2s}
-.card.dim{opacity:.32}
-.card.hit{border-color:var(--accent)}
-.card .mono{color:var(--muted)}
-.card h3{font-size:1.2rem}
-.card p{margin:0;color:var(--muted);font-size:.96rem}
-.card .chip.on{background:var(--accent);border-color:var(--accent);color:var(--bg)}
+footer{padding:26px 0 40px;font-size:.9rem;color:#dfe5f3}
+footer .wrap{max-width:860px}
 
-/* path */
-.path{list-style:none;margin:0;padding:0;display:grid;gap:0}
-.path li{display:grid;grid-template-columns:minmax(120px,170px) 1fr;gap:8px 24px;padding:20px 0;border-bottom:1px solid var(--line)}
-.path li:last-child{border-bottom:0}
-.path .when{color:var(--signal);font-variant-numeric:tabular-nums}
-.path h3{font-size:1.15rem;margin-bottom:2px}
-.path .where{color:var(--muted);font-size:.95rem}
-.path p{margin:8px 0 0;max-width:62ch}
-@media (max-width:560px){.path li{grid-template-columns:1fr}}
-
-/* contact */
-.contact{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}
-.contact a{display:block;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:18px 20px;text-decoration:none;color:var(--ink);overflow-wrap:anywhere}
-.contact a:hover{border-color:var(--accent)}
-.contact .mono{display:block;color:var(--muted);margin-bottom:4px}
-footer{padding:28px 0 44px;color:var(--muted);font-size:.9rem;border-top:1px solid var(--line)}
+@media (max-width:859px){
+  .act{align-items:flex-end;padding:52vh 0 40px}
+  .act .wrap{grid-template-columns:1fr}
+  .act.birds-left .wrap > *{grid-column:1}
+  .page{max-width:none;padding:24px 22px}
+  .hero-text{background:var(--page);backdrop-filter:blur(8px);border:1px solid var(--rule);border-radius:6px;padding:24px 22px;max-width:none}
+  .sheet{padding:26px 22px}
+  .work li,.path li{grid-template-columns:1fr}
+  .long{padding:60px 0}
+}
 </style>
 </head>
 <body>
+
+<div class="sky" aria-hidden="true"><div class="stars"></div><div class="sun"></div><div class="moon"></div></div>
+<canvas id="flock" aria-hidden="true"></canvas>
 
 <header class="top">
   <div class="wrap">
@@ -134,201 +146,235 @@ footer{padding:28px 0 44px;color:var(--muted);font-size:.9rem;border-top:1px sol
 </header>
 
 <main id="top">
-  <div class="wrap hero">
-    <div class="status mono"><span class="dot" aria-hidden="true"></span><span>Available for freelance projects</span><span>Kerala, India / Dammam, Saudi Arabia</span></div>
-    <h1>I build the web app <em>and</em> keep the server running.</h1>
-    <p class="lede">I'm Mubashir, a full stack developer working mostly in PHP and Laravel. I have been writing software since 2016 and looking after Linux servers for more than ten years, so one person can take your project from the first database table to a stable live deployment.</p>
-    <div class="cta">
-      <a class="btn solid" href="https://www.upwork.com/freelancers/~01a1aca0704aa27ed1">Hire me on Upwork</a>
-      <a class="btn ghost" href="#work">See my work</a>
-    </div>
-    <div class="facts">
-      <div><b>10+</b><span>years on Linux servers</span></div>
-      <div><b>2016</b><span>writing software since</span></div>
-      <div><b>6</b><span>skill areas I cover</span></div>
-      <div><b>2</b><span>languages: English, Malayalam</span></div>
-    </div>
-  </div>
-
-  <section id="about">
+  <section class="act" data-form="swirl" data-side="1">
     <div class="wrap">
-      <div class="head"><h2>About me</h2></div>
-      <div class="about">
-        <div>
-          <p>I studied Computer Applications at the University of Calicut and started as a junior engineer in Kozhikode. Since 2019 I have worked as a senior software engineer for a group of medical complexes in Saudi Arabia, where the software has to be right because clinics, insurers and the tax authority all depend on it.</p>
-          <p>That job taught me to care about the unglamorous parts: a query that stays fast when the table grows, a deployment that does not break at midnight, an integration that still works after the other side changes its API.</p>
-          <p>Alongside it I take freelance projects. Clients usually come to me with one of three things: something new to build, something broken to fix, or a server nobody wants to touch.</p>
+      <div class="hero-text">
+        <p class="where">Available for freelance projects. Kerala, India and Dammam, Saudi Arabia.</p>
+        <h1>I build the web app and keep the server running.</h1>
+        <p class="lede">I'm Mubashir, a full stack developer working mostly in PHP and Laravel. I have been writing software since 2016 and looking after Linux servers for more than ten years.</p>
+        <p class="how">Scroll down and the flock will act out each thing I do. Move your pointer to nudge the birds, or click to startle them.</p>
+        <div class="cta">
+          <a class="btn solid" href="https://www.upwork.com/freelancers/~01a1aca0704aa27ed1">Hire me on Upwork</a>
+          <a class="btn line" href="#skills">Watch the flock</a>
         </div>
-        <aside class="note">
-          <p><strong>How I work.</strong> I agree scope, timeline and cost before I start. You get regular updates and straight answers. The code lives in Git, comes with notes, and I stay around after delivery for fixes.</p>
-        </aside>
       </div>
     </div>
   </section>
 
-  <section id="skills">
+  <section class="act birds-left" id="about" data-form="hi" data-side="-1">
     <div class="wrap">
-      <div class="head"><h2>What I do</h2><p>Six areas. Tap one to see which projects used it.</p></div>
-      <div class="areas">
-        <button class="area" type="button" data-area="web" aria-pressed="false">
-          <span class="mono">Web applications</span>
-          <h3>Laravel back ends and admin tools</h3>
-          <p>Dashboards, admin panels and business tools, built from scratch or grown out of a codebase you already have.</p>
-          <span class="chips"><span class="chip">PHP</span><span class="chip">Laravel</span><span class="chip">JavaScript</span><span class="chip">HTML/CSS</span></span>
-        </button>
-        <button class="area" type="button" data-area="api" aria-pressed="false">
-          <span class="mono">APIs and integrations</span>
-          <h3>Making systems talk to each other</h3>
-          <p>REST APIs of my own, plus payment gateways, booking systems and other third-party services wired in properly.</p>
-          <span class="chips"><span class="chip">REST API</span><span class="chip">Payment gateways</span><span class="chip">Booking</span></span>
-        </button>
-        <button class="area" type="button" data-area="db" aria-pressed="false">
-          <span class="mono">Databases</span>
-          <h3>MySQL that stays fast</h3>
-          <p>Schema design, slow-query tuning and cleaning up databases that have become hard to manage as they grew.</p>
-          <span class="chips"><span class="chip">MySQL</span><span class="chip">Schema design</span><span class="chip">Query tuning</span></span>
-        </button>
-        <button class="area" type="button" data-area="health" aria-pressed="false">
-          <span class="mono">Healthcare and compliance</span>
-          <h3>Saudi healthcare integrations</h3>
-          <p>NPHIES insurance exchange over HL7 FHIR and ZATCA Phase 2 e-invoicing, delivered inside a working hospital system.</p>
-          <span class="chips"><span class="chip">NPHIES</span><span class="chip">HL7 FHIR</span><span class="chip">ZATCA Phase 2</span></span>
-        </button>
-        <button class="area" type="button" data-area="server" aria-pressed="false">
-          <span class="mono">Servers and deployment</span>
-          <h3>Linux, hosting and migrations</h3>
-          <p>VPS setup, WHM/cPanel, website and email migrations, PHP upgrades, DNS and Cloudflare, queues and background workers.</p>
-          <span class="chips"><span class="chip">Linux</span><span class="chip">cPanel/WHM</span><span class="chip">Docker</span><span class="chip">Cloudflare</span><span class="chip">Supervisor</span></span>
-        </button>
-        <button class="area" type="button" data-area="ai" aria-pressed="false">
-          <span class="mono">AI features</span>
-          <h3>LLMs inside real products</h3>
-          <p>Support chatbots and automated ticket replies built on LLM APIs, and AI coding tools in my own daily workflow.</p>
-          <span class="chips"><span class="chip">LLM APIs</span><span class="chip">Chatbots</span><span class="chip">Support automation</span></span>
-        </button>
+      <article class="page entry">
+        <h2>About me</h2>
+        <p>I studied Computer Applications at the University of Calicut and started as a junior engineer in Kozhikode. Since 2019 I have been a senior software engineer for a group of medical complexes in Saudi Arabia, where clinics, insurers and the tax authority all depend on the software being right.</p>
+        <p>That job taught me to care about the quiet parts: a query that stays fast when the table grows, a deployment that does not break at midnight, an integration that still works after the other side changes its API.</p>
+        <p class="does">On freelance projects I agree scope, timeline and cost before I start. You get regular updates and straight answers, the code lives in Git, and I stay around after delivery for fixes.</p>
+      </article>
+    </div>
+  </section>
+
+  <section class="act" id="skills" data-form="nest" data-side="1">
+    <div class="wrap">
+      <article class="page entry">
+        <p class="species">The weaver bird</p>
+        <h2>Web applications</h2>
+        <p class="habit">A weaver builds its nest one strand at a time and tests every knot before it adds the next.</p>
+        <p class="does">I build Laravel back ends, dashboards and admin tools the same way, from scratch or on top of the code you already have.</p>
+        <ul class="chips"><li>PHP</li><li>Laravel</li><li>JavaScript</li><li>HTML/CSS</li></ul>
+        <p class="watch">In the sky: the flock weaves a nest, ring by ring, while the rest bring material.</p>
+        <button class="see" type="button" data-area="web">See the projects that used this</button>
+      </article>
+    </div>
+  </section>
+
+  <section class="act birds-left" data-form="courier" data-side="-1">
+    <div class="wrap">
+      <article class="page entry">
+        <p class="species">The carrier pigeon</p>
+        <h2>APIs and integrations</h2>
+        <p class="habit">A carrier pigeon takes a message from one place to another and always finds its way back.</p>
+        <p class="does">That is all an API is. I write REST APIs and connect payment gateways, booking systems and other services so your systems can talk to each other.</p>
+        <ul class="chips"><li>REST API</li><li>Payment gateways</li><li>Booking</li></ul>
+        <p class="watch">In the sky: couriers fly a loop between two towers, out with a request and back with a reply.</p>
+        <button class="see" type="button" data-area="api">See the projects that used this</button>
+      </article>
+    </div>
+  </section>
+
+  <section class="act" data-form="cylinder" data-side="1">
+    <div class="wrap">
+      <article class="page entry">
+        <p class="species">The acorn woodpecker</p>
+        <h2>Databases</h2>
+        <p class="habit">It stores thousands of acorns, each in its own hole, and can still find the one it wants.</p>
+        <p class="does">I design MySQL schemas, tune slow queries and clean up databases that became hard to manage as they grew.</p>
+        <ul class="chips"><li>MySQL</li><li>Schema design</li><li>Query tuning</li></ul>
+        <p class="watch">In the sky: every bird takes its own slot, stacked in rings like rows in a table.</p>
+        <button class="see" type="button" data-area="db">See the projects that used this</button>
+      </article>
+    </div>
+  </section>
+
+  <section class="act birds-left" data-form="vee" data-side="-1">
+    <div class="wrap">
+      <article class="page entry">
+        <p class="species">The wild geese</p>
+        <h2>Healthcare and compliance</h2>
+        <p class="habit">Geese fly in a strict V. It only works when every bird holds its place.</p>
+        <p class="does">Saudi healthcare software is like that. I delivered NPHIES insurance exchange over HL7 FHIR and ZATCA Phase 2 e-invoicing inside a working hospital system, where the rules are not optional.</p>
+        <ul class="chips"><li>NPHIES</li><li>HL7 FHIR</li><li>ZATCA Phase 2</li></ul>
+        <p class="watch">In the sky: three V formations, each bird exactly where the rules put it.</p>
+        <button class="see" type="button" data-area="health">See the projects that used this</button>
+      </article>
+    </div>
+  </section>
+
+  <section class="act" data-form="wires" data-side="1">
+    <div class="wrap">
+      <article class="page entry">
+        <p class="species">The sentinels</p>
+        <h2>Servers and deployment</h2>
+        <p class="habit">When a flock rests, a few birds stay awake and keep watch so the others can sleep.</p>
+        <p class="does">A good server is a quiet one. I set up VPS and WHM/cPanel hosting, move websites and email, upgrade PHP, and handle DNS, Cloudflare, queues and background workers.</p>
+        <ul class="chips"><li>Linux</li><li>cPanel/WHM</li><li>Docker</li><li>Cloudflare</li><li>Supervisor</li></ul>
+        <p class="watch">In the sky: the flock sleeps on the wires while six sentinels circle overhead.</p>
+        <button class="see" type="button" data-area="server">See the projects that used this</button>
+      </article>
+    </div>
+  </section>
+
+  <section class="act birds-left" data-form="bubble" data-side="-1">
+    <div class="wrap">
+      <article class="page entry">
+        <p class="species">The starlings</p>
+        <h2>AI features</h2>
+        <p class="habit">A murmuration has no leader. Thousands of small decisions add up to something that moves like one mind.</p>
+        <p class="does">I build support chatbots and automated ticket replies on LLM APIs, and I use AI coding tools in my own work every day.</p>
+        <ul class="chips"><li>LLM APIs</li><li>Chatbots</li><li>Support automation</li></ul>
+        <p class="watch">In the sky: the flock forms a chat bubble and types a reply.</p>
+        <button class="see" type="button" data-area="ai">See the projects that used this</button>
+      </article>
+    </div>
+  </section>
+
+  <section class="long" id="work" data-form="cloud" data-side="0">
+    <div class="wrap">
+      <div class="sheet">
+        <h2>Selected work</h2>
+        <p class="sub">Projects from my Upwork portfolio and my day job.</p>
+        <div class="filterbar"><span id="filter-label">Showing all projects</span><button class="reset" type="button" id="reset" hidden>Show all</button></div>
+        <ul class="work">
+          <li data-areas="health api db web">
+            <div><h3>Hospital management system</h3><div class="kind">Healthcare</div></div>
+            <div><p>The application a group of medical complexes runs on, including multi-clinic inventory, NPHIES insurance exchange and ZATCA Phase 2 invoicing.</p>
+            <div class="tags"><span class="tag" data-a="health">Healthcare</span><span class="tag" data-a="api">APIs</span><span class="tag" data-a="db">Databases</span><span class="tag" data-a="web">Web app</span></div></div>
+          </li>
+          <li data-areas="ai db api">
+            <div><h3>AI support platform</h3><div class="kind">AI product</div></div>
+            <div><p>A support system with an LLM chatbot and automated replies, on a MySQL back end tuned to handle tickets and messages at scale.</p>
+            <div class="tags"><span class="tag" data-a="ai">AI</span><span class="tag" data-a="db">Databases</span><span class="tag" data-a="api">APIs</span></div></div>
+          </li>
+          <li data-areas="web api db">
+            <div><h3>Markkito</h3><div class="kind">Marketplace</div></div>
+            <div><p>A marketplace web application I worked on as part of the product team, building back-end features and the database behind them.</p>
+            <div class="tags"><span class="tag" data-a="web">Web app</span><span class="tag" data-a="api">APIs</span><span class="tag" data-a="db">Databases</span></div></div>
+          </li>
+          <li data-areas="web api">
+            <div><h3>Laser Booking Online</h3><div class="kind">Booking</div></div>
+            <div><p>An online booking site where customers pick a service and reserve a slot without phoning the clinic.</p>
+            <div class="tags"><span class="tag" data-a="web">Web app</span><span class="tag" data-a="api">Integrations</span></div></div>
+          </li>
+          <li data-areas="web db">
+            <div><h3>Lavender Pharmacies</h3><div class="kind">Pharmacy</div></div>
+            <div><p>The website for a pharmacy group, built and maintained end to end.</p>
+            <div class="tags"><span class="tag" data-a="web">Web app</span><span class="tag" data-a="db">Databases</span></div></div>
+          </li>
+          <li data-areas="web server">
+            <div><h3>Al Masroor Jewellery</h3><div class="kind">Retail</div></div>
+            <div><p>A jewellery business website, from build through to hosting and going live.</p>
+            <div class="tags"><span class="tag" data-a="web">Web app</span><span class="tag" data-a="server">Servers</span></div></div>
+          </li>
+          <li data-areas="web server db">
+            <div><h3>MyDomainBook.com</h3><div class="kind">Web product</div></div>
+            <div><p>A web application I built, deployed and host myself.</p>
+            <div class="tags"><span class="tag" data-a="web">Web app</span><span class="tag" data-a="server">Servers</span><span class="tag" data-a="db">Databases</span></div></div>
+          </li>
+        </ul>
       </div>
     </div>
   </section>
 
-  <section id="work">
+  <section class="long" id="path" data-form="migrate" data-side="0">
     <div class="wrap">
-      <div class="head"><h2>Selected work</h2><p>Projects from my Upwork portfolio and my day job.</p></div>
-      <div class="filterbar"><span class="mono" id="filter-label">Showing all projects</span><button class="reset" type="button" id="reset" hidden>Show all</button></div>
-      <div class="work">
-        <article class="card" data-areas="health api db web">
-          <span class="mono">Healthcare</span>
-          <h3>Hospital management system</h3>
-          <p>The application a group of medical complexes runs on, including multi-clinic inventory, NPHIES insurance exchange and ZATCA Phase 2 invoicing.</p>
-          <span class="chips"><span class="chip" data-a="health">Healthcare</span><span class="chip" data-a="api">APIs</span><span class="chip" data-a="db">Databases</span><span class="chip" data-a="web">Web app</span></span>
-        </article>
-        <article class="card" data-areas="ai db api">
-          <span class="mono">AI product</span>
-          <h3>AI support platform</h3>
-          <p>A support system with an LLM chatbot and automated replies, on a MySQL back end tuned to handle tickets and messages at scale.</p>
-          <span class="chips"><span class="chip" data-a="ai">AI</span><span class="chip" data-a="db">Databases</span><span class="chip" data-a="api">APIs</span></span>
-        </article>
-        <article class="card" data-areas="web api db">
-          <span class="mono">Marketplace</span>
-          <h3>Markkito</h3>
-          <p>A marketplace web application I worked on as part of the product team, building back-end features and the database behind them.</p>
-          <span class="chips"><span class="chip" data-a="web">Web app</span><span class="chip" data-a="api">APIs</span><span class="chip" data-a="db">Databases</span></span>
-        </article>
-        <article class="card" data-areas="web api">
-          <span class="mono">Booking</span>
-          <h3>Laser Booking Online</h3>
-          <p>An online booking site where customers pick a service and reserve a slot without phoning the clinic.</p>
-          <span class="chips"><span class="chip" data-a="web">Web app</span><span class="chip" data-a="api">Integrations</span></span>
-        </article>
-        <article class="card" data-areas="web db">
-          <span class="mono">Pharmacy</span>
-          <h3>Lavender Pharmacies</h3>
-          <p>The website for a pharmacy group, built and maintained end to end.</p>
-          <span class="chips"><span class="chip" data-a="web">Web app</span><span class="chip" data-a="db">Databases</span></span>
-        </article>
-        <article class="card" data-areas="web server">
-          <span class="mono">Retail</span>
-          <h3>Al Masroor Jewellery</h3>
-          <p>A jewellery business website, from build through to hosting and going live.</p>
-          <span class="chips"><span class="chip" data-a="web">Web app</span><span class="chip" data-a="server">Servers</span></span>
-        </article>
-        <article class="card" data-areas="web server db">
-          <span class="mono">Web product</span>
-          <h3>MyDomainBook.com</h3>
-          <p>A web application I built, deployed and host myself.</p>
-          <span class="chips"><span class="chip" data-a="web">Web app</span><span class="chip" data-a="server">Servers</span><span class="chip" data-a="db">Databases</span></span>
-        </article>
+      <div class="sheet">
+        <h2>Experience</h2>
+        <p class="sub">My own migration route, from Kozhikode to Dammam.</p>
+        <ol class="path">
+          <li>
+            <span class="when">2019 to now</span>
+            <div><h3>Senior Software Engineer</h3><div class="place">Dr Khalid Alruhaimi Medical Complexes, Dammam, Saudi Arabia</div>
+            <p>I build and run the hospital application, its insurance and tax integrations, and the servers underneath it.</p></div>
+          </li>
+          <li>
+            <span class="when">Nov 2017 to 2019</span>
+            <div><h3>Junior Software Engineer</h3><div class="place">elegansys Technologies LLP, Kozhikode, India</div>
+            <p>Worked on the Markkito marketplace application.</p></div>
+          </li>
+          <li>
+            <span class="when">Apr 2016 to Oct 2017</span>
+            <div><h3>Software Engineer</h3><div class="place">Clienview Technologies, Kozhikode, India</div>
+            <p>My first job after graduating, building and maintaining web applications.</p></div>
+          </li>
+          <li>
+            <span class="when">2013 to 2016</span>
+            <div><h3>Bachelor of Computer Applications</h3><div class="place">University of Calicut</div></div>
+          </li>
+        </ol>
       </div>
     </div>
   </section>
 
-  <section id="path">
+  <section class="act" id="contact" data-form="envelope" data-side="1">
     <div class="wrap">
-      <div class="head"><h2>Experience</h2></div>
-      <ol class="path">
-        <li>
-          <span class="when mono">2019 to now</span>
-          <div><h3>Senior Software Engineer</h3><div class="where">Dr Khalid Alruhaimi Medical Complexes, Dammam, Saudi Arabia</div>
-          <p>I build and run the hospital application, its insurance and tax integrations, and the servers underneath it.</p></div>
-        </li>
-        <li>
-          <span class="when mono">Nov 2017 to 2019</span>
-          <div><h3>Junior Software Engineer</h3><div class="where">elegansys Technologies LLP, Kozhikode, India</div>
-          <p>Worked on the Markkito marketplace application.</p></div>
-        </li>
-        <li>
-          <span class="when mono">Apr 2016 to Oct 2017</span>
-          <div><h3>Software Engineer</h3><div class="where">Clienview Technologies, Kozhikode, India</div>
-          <p>My first job after graduating, building and maintaining web applications.</p></div>
-        </li>
-        <li>
-          <span class="when mono">2013 to 2016</span>
-          <div><h3>Bachelor of Computer Applications</h3><div class="where">University of Calicut</div></div>
-        </li>
-      </ol>
-    </div>
-  </section>
-
-  <section id="contact">
-    <div class="wrap">
-      <div class="head"><h2>Let's talk</h2><p>Tell me what you need and I'll reply with a clear plan and estimate.</p></div>
-      <div class="contact">
-        <a href="mailto:pro.mubashir@outlook.com"><span class="mono">Email</span>pro.mubashir@outlook.com</a>
-        <a href="https://www.upwork.com/freelancers/~01a1aca0704aa27ed1"><span class="mono">Upwork</span>Hire me on Upwork</a>
-        <a href="https://www.linkedin.com/in/mubashir-palakkan"><span class="mono">LinkedIn</span>linkedin.com/in/mubashir-palakkan</a>
-        <a href="https://github.com/mub009"><span class="mono">GitHub</span>github.com/mub009</a>
-      </div>
+      <article class="page entry">
+        <h2>Send a message</h2>
+        <p class="does">Tell me what you need and I'll reply with a clear plan and estimate.</p>
+        <ul class="links">
+          <li><a href="mailto:pro.mubashir@outlook.com">Email <span>pro.mubashir@outlook.com</span></a></li>
+          <li><a href="https://www.upwork.com/freelancers/~01a1aca0704aa27ed1">Upwork <span>Hire me on Upwork</span></a></li>
+          <li><a href="https://www.linkedin.com/in/mubashir-palakkan">LinkedIn <span>linkedin.com/in/mubashir-palakkan</span></a></li>
+          <li><a href="https://github.com/mub009">GitHub <span>github.com/mub009</span></a></li>
+        </ul>
+        <p class="watch">In the sky: the flock folds itself into an envelope.</p>
+      </article>
     </div>
   </section>
 </main>
 
-<footer><div class="wrap">Mubashir Palakkan. Built by hand and hosted on GitHub Pages.</div></footer>
+<footer><div class="wrap">Mubashir Palakkan. Hosted on GitHub Pages. The birds are drawn live in your browser.</div></footer>
 
 <script>
 (function(){
   var names={web:"web applications",api:"APIs and integrations",db:"databases",health:"healthcare and compliance",server:"servers and deployment",ai:"AI features"};
-  var areas=document.querySelectorAll(".area"),cards=document.querySelectorAll(".card");
-  var label=document.getElementById("filter-label"),reset=document.getElementById("reset"),current=null;
+  var rows=document.querySelectorAll(".work li");
+  var label=document.getElementById("filter-label"),reset=document.getElementById("reset");
   function apply(a){
-    current=a;
-    areas.forEach(function(b){b.setAttribute("aria-pressed",String(b.dataset.area===a));});
     var n=0;
-    cards.forEach(function(c){
-      var hit=a&&c.dataset.areas.split(" ").indexOf(a)>-1;
-      c.classList.toggle("dim",!!a&&!hit);
-      c.classList.toggle("hit",!!hit);
+    rows.forEach(function(r){
+      var hit=a&&r.dataset.areas.split(" ").indexOf(a)>-1;
+      r.classList.toggle("dim",!!a&&!hit);
       if(hit)n++;
-      c.querySelectorAll(".chip").forEach(function(ch){ch.classList.toggle("on",!!a&&ch.dataset.a===a);});
+      r.querySelectorAll(".tag").forEach(function(t){t.classList.toggle("on",!!a&&t.dataset.a===a);});
     });
     label.textContent=a?n+" project"+(n===1?"":"s")+" using "+names[a]:"Showing all projects";
     reset.hidden=!a;
   }
-  areas.forEach(function(b){b.addEventListener("click",function(){
-    var a=b.dataset.area===current?null:b.dataset.area;
-    apply(a);
-    if(a){document.getElementById("work").scrollIntoView({behavior:"smooth",block:"start"});}
+  document.querySelectorAll(".see").forEach(function(b){b.addEventListener("click",function(){
+    apply(b.dataset.area);
+    document.getElementById("work").scrollIntoView({behavior:"smooth",block:"start"});
   });});
   reset.addEventListener("click",function(){apply(null);});
 })();
 </script>
+<script type="module" src="birds.min.js"></script>
 </body>
 </html>
