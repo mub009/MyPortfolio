@@ -239,19 +239,43 @@ function start() {
   const sunLight = new THREE.DirectionalLight(0xfff1d6, 1.6);
   sunLight.position.set(3, 6, 5); scene.add(sunLight);
 
-  // one bird: a pointed body with a tail, and two triangle wings that hinge at the shoulder
-  const cone = new THREE.ConeGeometry(0.1, 0.62, 5).rotateX(Math.PI / 2).toNonIndexed();
-  const bp = Array.from(cone.attributes.position.array);
-  bp.push(0, 0.01, -0.26, -0.13, 0.01, -0.5, 0.13, 0.01, -0.5);
-  const bodyGeo = new THREE.BufferGeometry();
-  bodyGeo.setAttribute('position', new THREE.Float32BufferAttribute(bp, 3));
-  bodyGeo.computeVertexNormals();
-  const wingGeo = new THREE.BufferGeometry();
-  wingGeo.setAttribute('position', new THREE.Float32BufferAttribute(
-    [0, 0, 0.17, 0, 0, -0.15, 0.66, 0, -0.12, 0, 0, 0.17, 0.66, 0, -0.12, 0.3, 0, 0.1], 3));
-  wingGeo.computeVertexNormals();
+  // bird parts: a pointed body with a tail, and flat wings that hinge at the shoulder
+  const geo = arr => { const g = new THREE.BufferGeometry();
+    g.setAttribute('position', new THREE.Float32BufferAttribute(arr, 3)); g.computeVertexNormals(); return g; };
+  const body = (r, len, ...parts) => geo(Array.from(new THREE.ConeGeometry(r, len, 5).rotateX(Math.PI / 2)
+    .toNonIndexed().attributes.position.array).concat(...parts));
+  const fan = (z, w, l) => [0, 0.01, z, -w, 0.01, z - l, w, 0.01, z - l];
+  const fork = (z, w, l) => [0, 0.01, z, -w, 0.01, z - l, -w * 0.15, 0.01, z - l * 0.4,
+    0, 0.01, z, w * 0.15, 0.01, z - l * 0.4, w, 0.01, z - l];
+  const beak = (z, l) => [0, 0, z + l, -0.014, 0, z, 0.014, 0, z];
+  const WING = {
+    song: geo([0, 0, 0.17, 0, 0, -0.15, 0.66, 0, -0.12, 0, 0, 0.17, 0.66, 0, -0.12, 0.3, 0, 0.1]),
+    swallow: geo([0, 0, 0.13, 0, 0, -0.08, 0.8, 0, -0.44, 0, 0, 0.13, 0.8, 0, -0.44, 0.42, 0, 0.03]),
+    gull: geo([0, 0, 0.13, 0, 0, -0.1, 0.5, 0, -0.02, 0, 0, 0.13, 0.5, 0, -0.02, 0.45, 0, 0.14,
+      0.45, 0, 0.14, 0.5, 0, -0.02, 1.08, 0, -0.2]),
+    goose: geo([0, 0, 0.16, 0, 0, -0.14, 0.5, 0, -0.06, 0, 0, 0.16, 0.5, 0, -0.06, 0.45, 0, 0.12,
+      0.45, 0, 0.12, 0.5, 0, -0.06, 0.95, 0, -0.16]),
+    parrot: geo([0, 0, 0.18, 0, 0, -0.16, 0.6, 0, -0.2, 0, 0, 0.18, 0.6, 0, -0.2, 0.45, 0, 0.1]),
+    hummer: geo([0, 0, 0.08, 0, 0, -0.04, 0.44, 0, -0.1]),
+    eagle: geo([0, 0, 0.2, 0, 0, -0.22, 0.8, 0, -0.2, 0, 0, 0.2, 0.8, 0, -0.2, 0.78, 0, 0.14,
+      0.78, 0, 0.14, 0.8, 0, 0.02, 1.04, 0, 0.1, 0.8, 0, 0.02, 0.8, 0, -0.09, 1.07, 0, -0.04,
+      0.8, 0, -0.09, 0.8, 0, -0.2, 1.02, 0, -0.18]),
+  };
+  // the flock is a mix of species: each has its own shape, size, colours and way of flying
+  const SPECIES = [
+    { share: 0.26, body: body(0.1, 0.62, fan(-0.26, 0.13, 0.24)), wing: WING.song, size: 0.85, freq: [9, 14], amp: 0.8, glide: 0, pal: [0, 1, 2] },                  // songbird
+    { share: 0.2, body: body(0.08, 0.56, fork(-0.22, 0.17, 0.42)), wing: WING.swallow, size: 0.9, freq: [10, 13], amp: 0.7, glide: 0.4, pal: [3, 0] },               // swallow
+    { share: 0.14, body: body(0.11, 0.66, fan(-0.28, 0.1, 0.18)), wing: WING.gull, size: 1.25, freq: [5, 7], amp: 0.6, glide: 0.7, pal: [4] },                        // gull
+    { share: 0.1, body: body(0.09, 1.0, fan(-0.42, 0.1, 0.16)), wing: WING.goose, size: 1.3, freq: [5, 6.5], amp: 0.65, glide: 0.2, pal: [5, 4] },                    // goose
+    { share: 0.13, body: body(0.11, 0.56, fan(-0.22, 0.06, 0.58)), wing: WING.parrot, size: 1.0, freq: [8, 11], amp: 0.8, glide: 0, pal: [6, 7, 8] },                 // parrot
+    { share: 0.11, body: body(0.07, 0.36, fan(-0.14, 0.07, 0.14), beak(0.16, 0.26)), wing: WING.hummer, size: 0.62, freq: [30, 38], amp: 1, glide: 0, pal: [6, 9] }, // hummingbird
+    { share: 0.06, body: body(0.13, 0.7, fan(-0.3, 0.2, 0.26)), wing: WING.eagle, size: 1.45, freq: [3.5, 4.5], amp: 0.55, glide: 0.85, pal: [5] },                    // eagle
+  ];
+  const pickSpecies = v => { let acc = 0; for (const sp of SPECIES) { acc += sp.share; if (v < acc) return sp; } return SPECIES[0]; };
 
-  const PAL = [['#12242a', '#f4ecdc', '#62f2ff'], ['#0b6e75', '#7fe3d2', '#8dffb5'], ['#d9631a', '#ffb066', '#ff86e0']]
+  const PAL = [['#12242a', '#f4ecdc', '#62f2ff'], ['#0b6e75', '#7fe3d2', '#8dffb5'], ['#d9631a', '#ffb066', '#ff86e0'],
+    ['#1d3f8a', '#9fc0ff', '#7aa8ff'], ['#f4f4ef', '#ffffff', '#e8fbff'], ['#6a4526', '#e3c7a3', '#ffd27a'], ['#2f9a4a', '#9ff0b0', '#7dffa0'],
+    ['#c9342b', '#ff9a8f', '#ff6f9a'], ['#e0aa12', '#ffe08a', '#fff07a'], ['#7a3fb8', '#d0b0ff', '#c79bff']]
     .map(([d, n, g]) => ({ day: new THREE.Color(d), night: new THREE.Color(n), glow: new THREE.Color(g),
       mat: new THREE.MeshLambertMaterial({ color: d, flatShading: true, side: THREE.DoubleSide }) }));
   // soft round light used for halos, trails and drifting sparks
@@ -265,16 +289,16 @@ function start() {
 
   const birds = [];
   for (let i = 0; i < N; i++) {
-    const r = rnd[i], pal = PAL[r[2] < 0.6 ? 0 : r[2] < 0.82 ? 1 : 2], mat = pal.mat;
+    const r = rnd[i], sp = pickSpecies(r[2]), pal = PAL[sp.pal[Math.floor(r[0] * sp.pal.length)]], mat = pal.mat;
     const g = new THREE.Group();
-    const rw = new THREE.Mesh(wingGeo, mat), lw = new THREE.Mesh(wingGeo, mat);
+    const rw = new THREE.Mesh(sp.wing, mat), lw = new THREE.Mesh(sp.wing, mat);
     lw.scale.x = -1;
-    g.add(new THREE.Mesh(bodyGeo, mat), rw, lw);
+    g.add(new THREE.Mesh(sp.body, mat), rw, lw);
     const halo = new THREE.Sprite(pal.halo); halo.scale.setScalar(1.5); g.add(halo);
     g.position.set((r[0] - 0.5) * 30, 6 + r[1] * 6, -4 - r[2] * 8);   // they fly in from above
     scene.add(g);
-    birds.push({ g, rw, lw, halo, pal, vel: new THREE.Vector3(), size: 0.8 + r[1] * 0.45,
-      freq: 9 + r[0] * 5, ph: r[2] * TAU, fly: 1 });
+    birds.push({ g, rw, lw, halo, pal, sp, vel: new THREE.Vector3(), size: sp.size * (0.9 + r[1] * 0.25),
+      freq: sp.freq[0] + r[1] * (sp.freq[1] - sp.freq[0]), ph: r[2] * TAU, fly: 1 });
   }
 
   // light trails behind every bird
@@ -506,7 +530,11 @@ function start() {
       // wings: flap in the air, fold when perched
       const air = Math.max(o.flap, Math.min(1, Math.max(0, (sp - 0.4) / 1.2)));
       b.fly += (air - b.fly) * (reduced ? 1 : 1 - Math.exp(-6 * dt));
-      const flapA = reduced ? 0.2 : Math.sin(t * b.freq + b.ph) * 0.8;
+      let flapA = 0.2;
+      if (!reduced) {                 // big birds glide between wingbeats
+        const gl = b.sp.glide ? Math.min(1, Math.max(0, (Math.sin(t * 0.45 + b.ph * 3) + b.sp.glide * 1.2 - 0.6) * 3)) : 0;
+        flapA = Math.sin(t * b.freq + b.ph) * b.sp.amp * (1 - gl) + 0.18 * gl;
+      }
       const ang = -1.2 + (flapA + 1.2) * b.fly;
       b.rw.rotation.z = ang; b.lw.rotation.z = -ang;
       b.halo.visible = glow;
