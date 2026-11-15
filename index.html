@@ -5,7 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Mubashir Palakkan Portfolio</title>
 <meta name="description" content="Mubashir Palakkan, full stack PHP and Laravel developer who also runs the servers. APIs, MySQL, healthcare integrations, Linux and AI features.">
-<script>try{if(localStorage.getItem("sky")!=="day")document.documentElement.classList.add("glow")}catch(e){document.documentElement.classList.add("glow")}</script>
+<script>/* dark glow at night, light sky by day, from the visitor's own clock */
+(function(){var m=null;try{m=sessionStorage.getItem("sky")}catch(e){}if(!m){var h=new Date().getHours();m=(h>=18||h<6)?"glow":"day"}if(m==="glow")document.documentElement.classList.add("glow")})();</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,650;1,9..144,400&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
@@ -224,8 +225,8 @@ footer .wrap{max-width:860px}
         <p class="species">The weaver bird</p>
         <h2>Web applications</h2>
         <p class="habit">A weaver builds its nest one strand at a time and tests every knot before it adds the next.</p>
-        <p class="does">I build Laravel back ends, dashboards and admin tools the same way, from scratch or on top of the code you already have.</p>
-        <ul class="chips"><li>PHP</li><li>Laravel</li><li>JavaScript</li><li>HTML/CSS</li></ul>
+        <p class="does">I build back ends, dashboards and admin tools the same way, from scratch or on top of the code you already have. Most of my work is PHP with Laravel, and I also work in CodeIgniter, CakePHP, .NET MVC, Node.js and React.</p>
+        <ul class="chips"><li>PHP</li><li>Laravel</li><li>CodeIgniter</li><li>CakePHP</li><li>.NET MVC</li><li>Node.js</li><li>React.js</li><li>JavaScript</li><li>HTML/CSS</li></ul>
         <p class="watch">In the sky: the flock weaves a nest, ring by ring, while the rest bring material.</p>
         <button class="see" type="button" data-area="web">See the projects that used this</button>
       </article>
@@ -239,7 +240,7 @@ footer .wrap{max-width:860px}
         <h2>APIs and integrations</h2>
         <p class="habit">A carrier pigeon takes a message from one place to another and always finds its way back.</p>
         <p class="does">That is all an API is. I write REST APIs and connect payment gateways, booking systems and other services so your systems can talk to each other.</p>
-        <ul class="chips"><li>REST API</li><li>Payment gateways</li><li>Booking</li></ul>
+        <ul class="chips"><li>REST API</li><li>Node.js</li><li>Python</li><li>Payment gateways</li><li>Booking</li></ul>
         <p class="watch">In the sky: couriers fly a loop between two towers, out with a request and back with a reply.</p>
         <button class="see" type="button" data-area="api">See the projects that used this</button>
       </article>
@@ -295,9 +296,22 @@ footer .wrap{max-width:860px}
         <h2>AI features</h2>
         <p class="habit">A murmuration has no leader. Thousands of small decisions add up to something that moves like one mind.</p>
         <p class="does">I build support chatbots and automated ticket replies on LLM APIs, and I use AI coding tools in my own work every day.</p>
-        <ul class="chips"><li>LLM APIs</li><li>Chatbots</li><li>Support automation</li></ul>
+        <ul class="chips"><li>Python</li><li>LLM APIs</li><li>Chatbots</li><li>Support automation</li></ul>
         <p class="watch">In the sky: the flock forms a chat bubble and types a reply.</p>
         <button class="see" type="button" data-area="ai">See the projects that used this</button>
+      </article>
+    </div>
+  </section>
+
+  <section class="act" data-form="phone" data-side="1">
+    <div class="wrap">
+      <article class="page entry">
+        <p class="species">The hummingbird</p>
+        <h2>Mobile apps and games</h2>
+        <p class="habit">A hummingbird hovers, flies backwards and changes direction the instant it wants to.</p>
+        <p class="does">An app should answer a touch that quickly. I build mobile apps in Flutter, from one codebase for Android and iOS, and games in the Godot engine.</p>
+        <ul class="chips"><li>Flutter</li><li>Godot</li></ul>
+        <p class="watch">In the sky: the flock draws a phone with a play button on its screen.</p>
       </article>
     </div>
   </section>
@@ -462,10 +476,16 @@ footer .wrap{max-width:860px}
   function label(){b.textContent=r.classList.contains("glow")?"Day sky":"Glow night";}
   label();
   b.addEventListener("click",function(){
-    var g=r.classList.toggle("glow");
-    try{localStorage.setItem("sky",g?"glow":"day");}catch(e){}
+    var g=r.classList.toggle("glow");chosen=true;
+    try{sessionStorage.setItem("sky",g?"glow":"day");}catch(e){}
     label(); if(window.__sky)window.__sky();
   });
+  var chosen=false;try{chosen=!!sessionStorage.getItem("sky")}catch(e){}
+  setInterval(function(){            // follow the clock while the page stays open
+    if(chosen)return;
+    var h=new Date().getHours(),night=h>=18||h<6;
+    if(night!==r.classList.contains("glow")){r.classList.toggle("glow",night);label();if(window.__sky)window.__sky();}
+  },60000);
 })();
 </script>
 <dialog id="lb" aria-label="Screenshot viewer">

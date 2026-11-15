@@ -22,6 +22,7 @@ const SKY = [
   ['#55a6de', '#dcf0f5', 0],    // healthcare
   ['#6d9fcb', '#f6e6c4', 0],    // servers: afternoon
   ['#5878b4', '#f9c58d', 0],    // ai: golden hour
+  ['#4a5fa0', '#f5ab7c', 0.05], // mobile apps and games
   ['#3c4a8a', '#ef8f6c', 0.2],  // work: sunset
   ['#232b5c', '#a85478', 1],    // experience: dusk
   ['#0a1030', '#27305e', 1],    // contact: night
@@ -31,7 +32,7 @@ const SKY = [
 const SKYG = [
   ['#050b24', '#0b3550'], ['#06102c', '#0a3f55'], ['#071433', '#0b4a58'], ['#08183a', '#0d4f5c'],
   ['#0a1640', '#124a66'], ['#0d1445', '#1b3f70'], ['#120f44', '#2a3577'], ['#170d42', '#3a2d78'],
-  ['#1a0c3c', '#462a6e'], ['#120a30', '#2d2360'], ['#080820', '#161a48'],
+  ['#190d40', '#40297a'], ['#1a0c3c', '#462a6e'], ['#120a30', '#2d2360'], ['#080820', '#161a48'],
 ].map(([a, b]) => ({ top: new THREE.Color(a), bot: new THREE.Color(b), night: 1 }));
 const isGlow = () => document.documentElement.classList.contains('glow');
 
@@ -187,6 +188,19 @@ const FORMS = {
       const a = j / 6 * TAU, rad = j === 6 ? 0 : 0.2;
       o.x = (d - 1) * 1.05 + Math.cos(a) * rad; o.y = 0.2 + Math.sin(a) * rad + bounce;
     }
+  },
+  // mobile apps and games: a phone with a play button on its screen
+  phone(i, t, o) {
+    o.z = 0; o.flap = 0.6;
+    if (i < 62) rrect(i / 62, 2.5, 4.1, 0.4, o);
+    else {
+      const k = i - 62, p = 1 + 0.1 * Math.sin(t * 3);
+      if (k < 10) line(o, -0.45, 0.7, -0.45, -0.7, k / 10);
+      else if (k < 19) line(o, -0.45, -0.7, 0.65, 0, (k - 10) / 9);
+      else line(o, 0.65, 0, -0.45, 0.7, (k - 19) / 9);
+      o.x *= p; o.y *= p;
+    }
+    o.y += Math.sin(t * 1.2 + o.x) * 0.04;
   },
   // work: the flock spreads across the whole sky
   cloud(i, t, o) {
